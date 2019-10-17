@@ -7,10 +7,16 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "chart.js": "^2.8.0",
     "core-js": "^2.6.5",
+    "qrcode": "^1.4.2",
     "register-service-worker": "^1.6.2",
+    "v-tab-bar": "^1.0.9",
     "view-design": "^4.0.0",
     "vue": "^2.6.10",
+    "vue-awesome": "^3.5.4",
+    "vue-chartjs": "^3.4.2",
+    "vue-qrcode": "^0.2.2",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1"
   },
