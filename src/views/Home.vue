@@ -5,7 +5,46 @@
     </div>
     <v-tab-bar class="tabbar">
       <v-tab-bar-item v-for="(tab , index) in tabBar" :key="index" :to="tab.link">
-        <v-icon :name="tab.icon" scale="1.2"></v-icon>
+        <div v-if="tab.icon == 'home'">
+          <div v-if="currentRoute == 'home'">
+          <img src="~@/assets/tabbar/homeActive.png" alt class="tabbarImg" />
+          </div>
+          <div v-if="currentRoute !== 'home'">
+          <img src="~@/assets/tabbar/home.png" alt class="tabbarImg" />
+          </div>
+        </div>
+         <div v-if="tab.icon == 'pool'">
+           <div v-if="currentRoute == 'pool'">
+          <img src="~@/assets/tabbar/poolActive.png" alt class="tabbarImg" />
+          </div>
+          <div v-if="currentRoute !== 'pool'">
+          <img src="~@/assets/tabbar/pool.png" alt class="tabbarImg" />
+          </div>
+        </div>
+         <div v-if="tab.icon == 'qrcode'">
+           <div v-if="currentRoute == 'qrcode'">
+          <img src="~@/assets/tabbar/qrActive.png" alt class="tabbarImg" />
+          </div>
+          <div v-if="currentRoute !== 'qrcode'">
+          <img src="~@/assets/tabbar/qr.png" alt class="tabbarImg" />
+          </div>
+        </div>
+         <div v-if="tab.icon == 'wallet'">
+           <div v-if="currentRoute == 'wallet'">
+          <img src="~@/assets/tabbar/walletActive.png" alt class="tabbarImg" />
+          </div>
+          <div v-if="currentRoute !== 'wallet'">
+          <img src="~@/assets/tabbar/wallet.png" alt class="tabbarImg" />
+          </div>
+        </div>
+         <div v-if="tab.icon == 'me'">
+           <div v-if="currentRoute == 'me'">
+          <img src="~@/assets/tabbar/meActive.png" alt class="tabbarImg" />
+          </div>
+          <div v-if="currentRoute !== 'me'">
+          <img src="~@/assets/tabbar/me.png" alt class="tabbarImg" />
+          </div>
+        </div>
         <h3 class="tabText">{{tab.name}}</h3>
       </v-tab-bar-item>
     </v-tab-bar>
@@ -26,7 +65,7 @@ export default {
         {
           name: "矿池",
           link: "/pool",
-          icon: "globe"
+          icon: "pool"
         },
         {
           name: "交易",
@@ -41,10 +80,23 @@ export default {
         {
           name: "我的",
           link: "/me",
-          icon: "user"
+          icon: "me"
         }
       ]
     };
+  },
+  computed:{
+    currentRoute(){
+      return this.$route.name
+    }
+  },
+  mounted(){
+
+      console.log()
+  },
+  watch:{
+    currentRoute(newVal , oldVal){
+    }
   }
 };
 </script>
@@ -72,5 +124,9 @@ export default {
   font-size: 12px;
   font-family: PingFang SC;
   font-weight: bold;
+}
+.tabbarImg{
+  height: 20px;
+  width: 20px;
 }
 </style>

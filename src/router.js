@@ -2,9 +2,14 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // ---------------------------- views
 
-//landing page
+//Pages
 import Landing from './views/Landing'
 import Home from './views/Home.vue'
+import buy from './views/buy.vue'
+import withdraw from './views/withdraw.vue'
+import addWallet from './views/addWallet.vue'
+import transaction from './views/transaction.vue'
+import record from './views/record.vue'
 //auth
 import Auth from './views/Auth.vue'
 // ---------------------------- components
@@ -28,6 +33,7 @@ const router = new Router({
     {
       path: '/',
       component: Home,
+      redirect: '/home',
       //home childern routes
       children:[
         {
@@ -85,6 +91,31 @@ const router = new Router({
           component: recover
         }
       ]
+    },
+    {
+      path: '/buy',
+      name: 'buy',
+      component: buy,
+    },
+    {
+      path: '/withdraw',
+      name: 'withdraw',
+      component: withdraw,
+    },
+    {
+      path: '/addWallet',
+      name: 'addWallet',
+      component: addWallet,
+    },
+    {
+      path: '/transaction',
+      name: 'transaction',
+      component: transaction,
+    },
+    {
+      path: '/record/:id',
+      name: 'record',
+      component: record,
     },
     // redirect views
     {

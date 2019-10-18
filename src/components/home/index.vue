@@ -37,16 +37,16 @@
         <h4 class="tabText">邀请好友</h4>
       </div>
       <div class="tabBox">
-        <img src="@/assets/icons/invite.png" class="tabIcon" />
-        <h4 class="tabText">邀请好友</h4>
+        <img src="@/assets/icons/addTokens.png" class="tabIcon" />
+        <h4 class="tabText">充值代币</h4>
       </div>
       <div class="tabBox">
-        <img src="@/assets/icons/invite.png" class="tabIcon" />
-        <h4 class="tabText">邀请好友</h4>
+        <img src="@/assets/icons/stats.png" class="tabIcon" />
+        <h4 class="tabText">矿池收益</h4>
       </div>
       <div class="tabBox">
-        <img src="@/assets/icons/invite.png" class="tabIcon" />
-        <h4 class="tabText">邀请好友</h4>
+        <img src="@/assets/icons/transactions.png" class="tabIcon" />
+        <h4 class="tabText">充提记录</h4>
       </div>
     </div>
     <div class="margeuTag">
