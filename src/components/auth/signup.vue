@@ -19,7 +19,7 @@
               <Icon type="ios-key-outline" />
             </span>
             <span slot="append" class="sendSMSBtn">
-              <Button>获取验证码</Button>
+              <Button @click="sendCode">获取验证码</Button>
             </span>
           </Input>
         </div>
@@ -33,10 +33,10 @@
           />
         </div>
         <div style="margin-top: 2vh">
-          <Input prefix="ios-keypad" placeholder="请输入推荐码" v-model="referCode" size="large" />
+          <Input prefix="ios-keypad" placeholder="请输入推荐码" v-model="refer" size="large" />
         </div>
         <div style="margin-top: 3vh;">
-          <Button long size="large" class="signUpbtn">注册</Button>
+          <Button long size="large" class="signUpbtn" @click="registerUser">注册</Button>
         </div>
       </div>
     </div>
@@ -51,15 +51,123 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+import Cookies from "@/plugins/cookies";
 export default {
   data() {
     return {
       userName: "",
       phone: "",
       smsCode: "",
+      smsverify: "",
       password: "",
-      referCode: ""
+      refer: ""
     };
+  },
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "getLoginStatus"
+    })
+  },
+  methods: {
+    ...mapActions({
+      sendSMSCode: "sendSMSCode",
+      userRegister: "userRegister",
+      toggelLoader: "toggelLoader"
+    }),
+    sendCode() {
+      let that = this;
+      if (that.isValid(that.phone)) {
+        that.toggelLoader();
+        let data = {
+          phone: that.phone
+        };
+        that.sendSMSCode(data).then(res => {
+          that.smsverify = res.result.smsverify;
+          that.toggelLoader();
+        });
+      } else {
+        this.$Message.error({
+          background: true,
+          content: "Invalid phone number"
+        });
+      }
+    },
+    registerUser() {
+      let that = this;
+      if (!that.isValid(that.userName)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Username"
+        });
+      } else if (!that.isValid(that.phone)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Phone number"
+        });
+      } else if (!that.isValid(that.smsCode)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Verification Code"
+        });
+      } else if (!that.isValid(that.password)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Password"
+        });
+      } else {
+        let data = {
+          username: that.userName,
+          country: '86',
+          phone: that.phone,
+          smscode: that.smsCode,
+          smsverify: that.smsverify,
+          refer: that.refer,
+          password: that.password
+        };
+        console.log(data);
+        that.toggelLoader();
+        that
+          .userRegister(data)
+          .then(res => {
+            console.log(res);
+            that.toggelLoader();
+          })
+          .catch(err => {
+            console.log("userRegister error ", err);
+            that.toggelLoader();
+          });
+      }
+    },
+    isValid(value) {
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "object" && Object.keys(value).length === 0) ||
+        (typeof value === "string" && value.trim().length === 0)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  },
+  mounted() {
+    let that = this;
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var referCode = url.searchParams.get("refer");
+    if (referCode) {
+      Cookies.setCookie("referCode", referCode, 24);
+      that.refer = referCode;
+    } else {
+      let referCode = Cookies.getCookies("referCode");
+      if (referCode) {
+        that.refer = referCode;
+      } else {
+        console.log("no refer code");
+      }
+    }
   }
 };
 </script>

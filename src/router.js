@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Cookies from '@/plugins/cookies'
+import store from './store/store'
 // ---------------------------- views
 
 //Pages
@@ -10,6 +12,12 @@ import withdraw from './views/withdraw.vue'
 import addWallet from './views/addWallet.vue'
 import transaction from './views/transaction.vue'
 import record from './views/record.vue'
+import scan from './views/scan.vue'
+import changePassword from './views/changePassword.vue'
+import phone from './views/phones.vue'
+import addPhone from './views/addphone.vue'
+import transfer from './views/transfer.vue'
+
 //auth
 import Auth from './views/Auth.vue'
 // ---------------------------- components
@@ -34,6 +42,7 @@ const router = new Router({
       path: '/',
       component: Home,
       redirect: '/home',
+      beforeEnter: requireAuth,
       //home childern routes
       children:[
         {
@@ -95,27 +104,57 @@ const router = new Router({
     {
       path: '/buy',
       name: 'buy',
+      beforeEnter: requireAuth,
       component: buy,
     },
     {
       path: '/withdraw',
       name: 'withdraw',
+      beforeEnter: requireAuth,
       component: withdraw,
     },
     {
       path: '/addWallet',
       name: 'addWallet',
+      beforeEnter: requireAuth,
       component: addWallet,
     },
     {
       path: '/transaction',
       name: 'transaction',
+      beforeEnter: requireAuth,
       component: transaction,
     },
     {
       path: '/record/:id',
       name: 'record',
+      beforeEnter: requireAuth,
       component: record,
+    },
+    {
+      path: '/scan',
+      name: 'scan',
+      component: scan,
+    },
+    {
+      path: '/changePassword',
+      name: 'changePassword',
+      component: changePassword,
+    },
+    {
+      path: '/phone',
+      name: 'phone',
+      component: phone,
+    },
+    {
+      path: '/phone/add',
+      name: 'addphone',
+      component: addPhone,
+    },
+    {
+      path: '/transfer',
+      name: 'transfer',
+      component: transfer,
     },
     // redirect views
     {
@@ -124,5 +163,17 @@ const router = new Router({
     },
   ]
 })
+function requireAuth(to, from, next) {
+  if (!store.getters.getLoginStatus) {
+    let userToken = Cookies.getCookies('x-auth-tok')
+    if(userToken){
+      next()
+    }else{
+      next("/auth")
+    }
+  } else {
+    next()
+  }
+}
 
 export default router

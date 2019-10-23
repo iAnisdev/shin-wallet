@@ -3,7 +3,21 @@
     <div class="layer">
       <img src="@/assets/logo.png" class="logo" srcset />
       <div class="form">
-        <Input prefix="ios-contact" placeholder="请输入用户名" v-model="userName" size="large" />
+        <Select v-model="loginMethod" placeholder="Login Method">
+          <Option v-for="item in methodList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+        <div style="margin-top: 2vh" v-if="loginMethod == 'username'">
+          <Input prefix="ios-contact" placeholder="请输入用户名" v-model="userName" size="large" />
+        </div>
+        <div style="margin-top: 2vh" v-if="loginMethod == 'phone'">
+          <Input
+            prefix="ios-phone-portrait"
+            type="number"
+            placeholder="请输入手机号"
+            v-model="phone"
+            size="large"
+          />
+        </div>
         <div style="margin-top: 2vh">
           <Input
             prefix="ios-lock"
@@ -14,7 +28,7 @@
           />
         </div>
         <div style="margin-top: 3vh;">
-          <Button long size="large" class="loginBtn">登录</Button>
+          <Button long size="large" class="loginBtn" @click="login">登录</Button>
         </div>
       </div>
       <router-link to="/auth/recover">
@@ -32,13 +46,94 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
       userName: "",
-      password: ""
+      password: "",
+      phone: "",
+      loginMethod: "username",
+      methodList: [
+        {
+          label: "Username",
+          value: "username"
+        },
+        {
+          label: "Phone",
+          value: "phone"
+        }
+      ]
     };
-  }
+  },
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "getLoginStatus"
+    })
+  },
+  methods: {
+    ...mapActions({
+      userLogin: "userLogin",
+      toggelLoader: "toggelLoader"
+    }),
+    login() {
+      let that = this;
+      let data = {
+
+      }
+      let loginMethod = that.loginMethod;
+      if (loginMethod == "username") {
+        if (!that.isValid(that.userName)) {
+          this.$Message.error({
+            background: true,
+            content: "Invalid Username"
+          });
+          return;
+        }else{
+          data.username = that.userName
+        }
+      } else {
+        if (!that.isValid(that.phone)) {
+          this.$Message.error({
+            background: true,
+            content: "Invalid Phone Number"
+          });
+          return;
+        }else{
+          data.phone = that.phone
+          data.country = '86'
+        }
+      }
+      if (!that.isValid(that.password)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Password"
+        });
+      } else {
+        data.password = that.password
+            that.toggelLoader();
+        that.userLogin(data).then((res) => {
+            that.toggelLoader();
+        }).catch((err) => {
+            that.toggelLoader();
+          console.log(err)
+        })
+      }
+    },
+    isValid(value) {
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "object" && Object.keys(value).length === 0) ||
+        (typeof value === "string" && value.trim().length === 0)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  },
+  mounted() {}
 };
 </script>
 

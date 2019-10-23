@@ -2,11 +2,12 @@
   <section class="qrcodePage">
     <div class="qrcodeCard">
       <div class="walletBox">
-        <h4 class="walletAddress">钱包账号：215614566</h4>
-        <Icon type="md-copy" size="20" />
+        <h4 class="walletAddress">钱包账号：{{userAddress | addressShortner('15')}}</h4>
+        <input type="hidden" id="walletAddr" :value="userAddress" />
+        <Icon type="md-copy" size="20" @click="copyTestingCode"/>
       </div>
       <div class="qrBox">
-      <qrcode value="http://www.sharein.io/" class="qrcode" />
+      <qrcode :value="userAddress" class="qrcode" />
       </div>
     </div>
   </section>
@@ -14,6 +15,7 @@
 
 <script>
 import Qrcode from 'vue-qrcode'
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Qrcode,
@@ -21,6 +23,38 @@ export default {
   data(){
     return{
 
+    }
+  },
+  computed:{
+  ...mapGetters({
+    isLoggedIn: "getLoginStatus",
+    userToken: "getUserToken",
+    userAddress: "getUserAddress",
+    userSAddress: "getUserSAddress",
+    userUID: "getUserUID"
+  })
+  },
+  methods:{
+
+    copyTestingCode() {
+      let that = this;
+      let testingCodeToCopy = document.querySelector("#walletAddr");
+      testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
+      testingCodeToCopy.select();
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+         this.$Message.success({
+          background: true,
+          content: "Wallet Address Copied"
+        });
+      } catch (err) {
+        alert("Oops, unable to copy");
+      }
+
+      /* unselect the range */
+      testingCodeToCopy.setAttribute("type", "hidden");
+      window.getSelection().removeAllRanges();
     }
   }
 };

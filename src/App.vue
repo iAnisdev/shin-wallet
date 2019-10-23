@@ -1,16 +1,30 @@
 <template>
   <div id="app">
+    <loader v-if="showLoaderStatus"/>
     <router-view />
   </div>
 </template>
 
 <script>
+import {mapGetters , mapActions } from 'vuex'
+import loader from '@/components/shared/loaders.vue'
 export default {
   name: "app",
+  components:{
+    loader
+  },
+  computed:{
+    ...mapGetters({
+      showLoaderStatus: 'showLoaderStatus'
+    }),
+  },
   methods: {
-    
+    ...mapActions({
+      getDataFromCookies: 'getDataFromCookies'
+    })
   },
    beforeMount() {
+     this.getDataFromCookies()
   },
 };
 </script>

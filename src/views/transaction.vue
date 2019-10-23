@@ -15,8 +15,8 @@
               </div>
               <h4 class="tokenName">SHIN</h4>
               <div class="row">
-                  <h3 class="qty">数量：</h3>
-                  <h4 class="qtyAmount">12345.00</h4>
+                <h3 class="qty">数量：</h3>
+                <h4 class="qtyAmount">12345.00</h4>
               </div>
             </div>
             <div class="detialButton">查看详情</div>
@@ -24,7 +24,7 @@
         </div>
       </TabPane>
       <TabPane label="提币记录" name="two">
-          <div class="content" v-for="i in 5" :key="i">
+        <div class="content" v-for="i in 5" :key="i">
           <div class="transCard">
             <div class="cardContent">
               <div class="rowSP">
@@ -36,14 +36,14 @@
               </div>
               <h4 class="tokenName">SHIN</h4>
               <div class="rowSP">
-              <div class="row">
+                <div class="row">
                   <h3 class="qty">数量：</h3>
                   <h4 class="qtyAmount">12345.00</h4>
-              </div>
-              <div class="row">
+                </div>
+                <div class="row">
                   <h3 class="tfeeTitle">数量：</h3>
                   <h4 class="feeAmount">12345.00</h4>
-              </div>
+                </div>
               </div>
             </div>
             <div class="detialButton">查看详情</div>
@@ -160,36 +160,36 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 1;
 }
-.qty{
-font-size:10px;
-font-family:PingFang SC;
-font-weight:500;
-align-self: center;
-color:rgba(0,0,0,1);
-opacity:0.4;
+.qty {
+  font-size: 10px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  align-self: center;
+  color: rgba(0, 0, 0, 1);
+  opacity: 0.4;
 }
-.qtyAmount{
-font-size:14px;
-font-family:PingFang SC;
-font-weight:500;
-align-self: center;
-color:rgba(0,0,0,1);
-opacity:1;
+.qtyAmount {
+  font-size: 14px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  align-self: center;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
 }
-.tfeeTitle{
-font-size:10px;
-font-family:PingFang SC;
-font-weight:500;
-align-self: center;
-color:rgba(0,0,0,1);
-opacity:0.4;
+.tfeeTitle {
+  font-size: 10px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  align-self: center;
+  color: rgba(0, 0, 0, 1);
+  opacity: 0.4;
 }
-.feeAmount{
-font-size:14px;
-font-family:PingFang SC;
-font-weight:500;
-align-self: center;
-color:rgba(0,0,0,1);
-opacity:1;
+.feeAmount {
+  font-size: 14px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  align-self: center;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
 }
 </style>

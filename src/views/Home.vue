@@ -29,14 +29,14 @@
           <img src="~@/assets/tabbar/qr.png" alt class="tabbarImg" />
           </div>
         </div>
-         <div v-if="tab.icon == 'wallet'">
+         <!-- <div v-if="tab.icon == 'wallet'">
            <div v-if="currentRoute == 'wallet'">
           <img src="~@/assets/tabbar/walletActive.png" alt class="tabbarImg" />
           </div>
           <div v-if="currentRoute !== 'wallet'">
           <img src="~@/assets/tabbar/wallet.png" alt class="tabbarImg" />
           </div>
-        </div>
+        </div> -->
          <div v-if="tab.icon == 'me'">
            <div v-if="currentRoute == 'me'">
           <img src="~@/assets/tabbar/meActive.png" alt class="tabbarImg" />
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import {mapGetters , mapActions} from 'vuex'
 export default {
   name: "home",
   data() {
@@ -72,11 +73,11 @@ export default {
           link: "/qrcode",
           icon: "qrcode"
         },
-        {
-          name: "资产",
-          link: "/wallet",
-          icon: "wallet"
-        },
+        // {
+        //   name: "资产",
+        //   link: "/wallet",
+        //   icon: "wallet"
+        // },
         {
           name: "我的",
           link: "/me",
@@ -86,6 +87,9 @@ export default {
     };
   },
   computed:{
+    ...mapGetters({
+      isLoggedIn: 'getLoginStatus'
+    }),
     currentRoute(){
       return this.$route.name
     }

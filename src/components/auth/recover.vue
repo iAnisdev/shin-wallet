@@ -16,27 +16,30 @@
           </div>
         </div>
         <div v-if="codeSent">
-          <Input prefix="ios-key-outline" placeholder="请输入验证码" v-model="code" size="large" />
+          <Input prefix="ios-key-outline" placeholder="请输入验证码" v-model="smsCode" size="large" />
           <div style="margin-top: 2vh">
-          <Input
-            prefix="ios-lock"
-            type="password"
-            placeholder="输入新密码"
-            v-model="password"
-            size="large"
-          />
-        </div>
-        <div style="margin-top: 2vh">
-          <Input
-            prefix="ios-lock"
-            type="password"
-            placeholder="确认新密码"
-            v-model="cpassword"
-            size="large"
-          />
-        </div>
-          <div style="margin-top: 3vh;">
-            <Button long size="large" class="smsBtn">恢复帐户</Button>
+            <Input
+              prefix="ios-lock"
+              type="password"
+              placeholder="输入新密码"
+              v-model="password"
+              size="large"
+            />
+          </div>
+          <div style="margin-top: 2vh">
+            <Input
+              prefix="ios-lock"
+              type="password"
+              placeholder="确认新密码"
+              v-model="cpassword"
+              size="large"
+            />
+          </div>
+          <div style="margin-top: 3vh;" v-if="!codeSent">
+            <Button long size="large" class="smsBtn">获取验证码</Button>
+          </div>
+          <div style="margin-top: 3vh;" v-if="codeSent">
+            <Button long size="large" type="success" class="recoverBtn" @click="recover">恢复帐户</Button>
           </div>
         </div>
       </div>
@@ -52,20 +55,106 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 export default {
   data() {
     return {
       codeSent: false,
       phone: "",
-      hash: "",
-      code: "",
+      smsverify: "",
+      smsCode: "",
       password: "",
       cpassword: ""
     };
   },
-  methods:{
-    sendCode(){
-      this.codeSent = true
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "getLoginStatus"
+    })
+  },
+  methods: {
+    ...mapActions({
+      sendSMSCode: "sendSMSCode",
+      changePassword: "changePassword",
+      toggelLoader: "toggelLoader"
+    }),
+    sendCode() {
+      let that = this;
+      if (that.isValid(that.phone)) {
+        that.toggelLoader();
+        let data = {
+          phone: that.phone
+        };
+        that.sendSMSCode(data).then(res => {
+          that.smsverify = res.result.smsverify;
+          that.toggelLoader();
+          that.codeSent = true;
+        });
+      } else {
+        this.$Message.error({
+          background: true,
+          content: "Invalid phone number"
+        });
+      }
+    },
+    recover() {
+      let that = this;
+      if (!that.isValid(that.smsCode)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Verification Code"
+        });
+      } else if (!that.isValid(that.password)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Password"
+        });
+      } else if (!that.isValid(that.cpassword)) {
+        this.$Message.error({
+          background: true,
+          content: "Invalid Password"
+        });
+      } else if (that.password !== that.cpassword) {
+        this.$Message.error({
+          background: true,
+          content: "Password didn't match"
+        });
+      } else {
+        let data = {
+          phone: that.phone,
+          smscode: that.smsCode,
+          smsverify: that.smsverify,
+          new: that.password
+        };
+        that
+          .changePassword(data)
+          .then(res => {
+            console.log(res);
+            this.$Message.success({
+              background: true,
+              content: "Password Updated"
+            });
+            that.$router.push('/login')
+          })
+          .catch(err => {
+            this.$Message.error({
+              background: true,
+              content: err.message
+            });
+          });
+      }
+    },
+    isValid(value) {
+      if (
+        value === undefined ||
+        value === null ||
+        (typeof value === "object" && Object.keys(value).length === 0) ||
+        (typeof value === "string" && value.trim().length === 0)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     }
   }
 };
@@ -96,6 +185,14 @@ export default {
 }
 .smsBtn {
   background: rgba(58, 51, 140, 1);
+  font-size: 14px;
+  font-family: PingFang SC;
+  font-weight: 400;
+  line-height: 36px;
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+}
+.recoverBtn {
   font-size: 14px;
   font-family: PingFang SC;
   font-weight: 400;

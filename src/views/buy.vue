@@ -19,13 +19,14 @@
     </div>
     <div class="contentInfo">
       <h4 class="shinWalletAdd">SHIN充值地址</h4>
-      <Input v-model="walletAddr" style="margin-top: 1vh">
+      <Input v-model="walletAddr" readonly style="margin-top: 1vh">
         <span slot="append">
-          <Button type="primary" class="button">复制</Button>
+          <Button type="primary" class="button" @click="copyTestingCode">复制</Button>
         </span>
       </Input>
+        <input type="hidden" id="walletAddr" :value="walletAddr" />
       <ul v-for="(item , index) in uiList" :key="index">
-          <li>{{item}}</li>
+        <li>{{item}}</li>
       </ul>
     </div>
   </section>
@@ -54,13 +55,36 @@ export default {
       ],
       selectedType: "ERC20",
       walletAddr: "0123456789123456789123456789123456",
-      uiList:[
-          '禁止向地址充值当前币种以外的资产，任何充入当前币种地址的非当前币种资产将不可找回。',
-          '充值完成后，你可以进入充提记录页面跟踪进度。',
-          '您的充值地址不会经常改变，可以重复充值；如有改动，我们会尽量通过网站公告或邮件通知您。',
-          '请务必确认电脑及浏览器安全，防止信息被篡改或泄露。'
+      uiList: [
+        "禁止向地址充值当前币种以外的资产，任何充入当前币种地址的非当前币种资产将不可找回。",
+        "充值完成后，你可以进入充提记录页面跟踪进度。",
+        "您的充值地址不会经常改变，可以重复充值；如有改动，我们会尽量通过网站公告或邮件通知您。",
+        "请务必确认电脑及浏览器安全，防止信息被篡改或泄露。"
       ]
     };
+  },
+  methods: {
+    copyTestingCode() {
+      let that = this;
+      let testingCodeToCopy = document.querySelector("#walletAddr");
+      console.log(testingCodeToCopy);
+      testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
+      testingCodeToCopy.select();
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+        this.$Message.success({
+          background: true,
+          content: "Wallet Address Copied"
+        });
+      } catch (err) {
+        alert("Oops, unable to copy");
+      }
+
+      /* unselect the range */
+      testingCodeToCopy.setAttribute("type", "hidden");
+      window.getSelection().removeAllRanges();
+    }
   }
 };
 </script>
@@ -134,15 +158,15 @@ export default {
 .button {
   background: rgba(58, 51, 140, 1);
 }
-ul{
+ul {
   padding: 1% 4%;
 }
-ul li{
-font-size:10px;
-font-family:PingFang SC;
-font-weight:500;
-line-height:16px;
-color:rgba(0,0,0,1);
-opacity:0.4;
+ul li {
+  font-size: 10px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 0.4;
 }
 </style>

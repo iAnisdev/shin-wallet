@@ -3,17 +3,21 @@
     <div class="userInfoBox">
       <div class="userInfoCard">
         <div class="rowSB">
-          <h3 class="name">Anis</h3>
+          <h3 class="name">{{userData.username}}</h3>
+          <router-link to="/qrcode">
           <v-icon name="qrcode" scale="1.2"></v-icon>
+          </router-link>
         </div>
         <div class="rowFS">
-          <h5 class="walletAddr">钱包账号：215614566</h5>
-          <Icon type="md-copy" size="20" />
+          <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')}}</h5>
+        <input type="hidden" id="walletAddr" :value="userAddress" />
+          <Icon type="md-copy" size="20"  @click="copyTestingCode"/>
         </div>
       </div>
     </div>
     <div class="cellGroup">
-      <div class="cellWithArrow">
+      <router-link to="/changePassword">
+        <div class="cellWithArrow" >
         <div class="rowFS">
           <img src="@/assets/me/lock.png" alt class="cellImg" />
           <h4 class="cellTitle">交易密码</h4>
@@ -23,7 +27,9 @@
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
       </div>
+      </router-link>
       <div class="cellLine"></div>
+      <router-link to="/phone">
       <div class="cell">
         <div class="rowFS">
           <img src="@/assets/me/phone.png" alt class="cellImg" />
@@ -33,9 +39,10 @@
           <h5 class="cellExtra">已绑定</h5>
         </div>
       </div>
+      </router-link>
     </div>
     <div class="cellGroup">
-      <div class="cellWithArrow">
+      <!-- <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/message.png" alt class="cellImg" />
           <h4 class="cellTitle">绑定邮箱</h4>
@@ -45,7 +52,7 @@
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
       </div>
-      <div class="cellLine"></div>
+      <div class="cellLine"></div> -->
       <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/refer.png" alt class="cellImg" />
@@ -67,7 +74,7 @@
       </div>
     </div>
     <div class="cellGroup">
-      <div class="cellWithArrow">
+      <!-- <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/sound.png" alt class="cellImg" />
           <h4 class="cellTitle">绑定邮箱</h4>
@@ -76,8 +83,8 @@
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
       </div>
-      <div class="cellLine"></div>
-      <div class="cellWithArrow">
+      <div class="cellLine"></div> -->
+      <!-- <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/translate.png" alt class="cellImg" />
           <h4 class="cellTitle">邀请好友</h4>
@@ -86,8 +93,9 @@
           <h5 class="cellExtra">简体中文</h5>
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
-      </div>
+      </div> 
       <div class="cellLine"></div>
+      -->
       <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/share.png" alt class="cellImg" />
@@ -104,7 +112,7 @@
           <h4 class="cellTitle">SHIN充提币全教程</h4>
         </div>
         <div class="rowFS">
-          <h5 class="cellExtra">asdf@asd.com</h5>
+          <h5 class="cellExtra">SHIN@sharein.io</h5>
         </div>
       </div>
     </div>
@@ -118,7 +126,59 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters, mapActions } from "vuex";
+export default {
+  data(){
+    return {
+      
+    }
+  },
+  computed:{
+    ...mapGetters({
+      userData: "userData",
+      isLoggedIn: "getLoginStatus",
+      userToken: "getUserToken",
+      userAddress: "getUserAddress",
+      userSAddress: "getUserSAddress",
+      userUID: "getUserUID"
+    })
+  },
+  methods:{
+    ...mapActions({
+      getAccountBalance: "getAccountBalance",
+      getDataFromCookies: "getDataFromCookies",
+      toggelLoader: "toggelLoader",
+      getUserData: "getUserData"
+    }),
+    copyTestingCode() {
+      let that = this;
+      let testingCodeToCopy = document.querySelector("#walletAddr");
+      testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
+      testingCodeToCopy.select();
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+         this.$Message.success({
+          background: true,
+          content: "Wallet Address Copied"
+        });
+      } catch (err) {
+        alert("Oops, unable to copy");
+      }
+
+      /* unselect the range */
+      testingCodeToCopy.setAttribute("type", "hidden");
+      window.getSelection().removeAllRanges();
+    }
+  },
+  mounted(){
+      let that = this;
+    let data = {
+      token : that.userToken
+    }
+    this.getUserData(data);
+  }
+};
 </script>
 
 <style scoped>

@@ -2,31 +2,32 @@
   <section class="homePage">
     <div class="profileInfo">
       <div class="rowSB">
-        <h3 class="name">Anis</h3>
-        <img src="@/assets/scan.png" class="tabIcon" />
+        <h3 class="name">{{userData.username}}</h3>
+        <img src="@/assets/scan.png" class="tabIcon" @click="scanPage" />
       </div>
       <div class="rowFS">
-        <h5 class="walletAddr">钱包账号：215614566</h5>
-        <Icon type="md-copy" size="20" />
+        <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('8')}}</h5>
+        <input type="hidden" id="walletAddr" :value="userAddress" />
+        <Icon type="md-copy" size="20" @click="copyTestingCode" />
       </div>
-      <h5 class="refNumber">邀请码：1234567</h5>
+      <h5 class="refNumber">邀请码：{{userData.uid}}</h5>
     </div>
     <div class="walletInfoCardBox">
       <div class="walletInfoCard">
         <div class="col">
-          <h4>总资产折合（CNY)</h4>
-          <h3>0</h3>
+          <h4 class="valueTitle">总资产折合（CNY)</h4>
+          <h3>{{accountBalanceCYN | noToFIxed('8')}}</h3>
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
           <div class="col">
-            <h4>总资产折合（CNY)</h4>
-            <h3>0</h3>
+            <h4 class="valueTitle">昨日矿池收益（SHIN）</h4>
+            <h3>{{accountBalance | noToFIxed('6')}}</h3>
           </div>
           <div class="lineHor"></div>
           <div class="col">
-            <h4>总资产折合（CNY)</h4>
-            <h3>0</h3>
+            <h4 class="valueTitle">收益总折算（USDT）</h4>
+            <h3>{{accountBalanceUSDT | noToFIxed('6')}}</h3>
           </div>
         </div>
       </div>
@@ -36,18 +37,24 @@
         <img src="@/assets/icons/invite.png" class="tabIcon" />
         <h4 class="tabText">邀请好友</h4>
       </div>
+      <router-link to="/buy">
       <div class="tabBox">
         <img src="@/assets/icons/addTokens.png" class="tabIcon" />
         <h4 class="tabText">充值代币</h4>
       </div>
+      </router-link>
+      <router-link to="/pool">
       <div class="tabBox">
         <img src="@/assets/icons/stats.png" class="tabIcon" />
         <h4 class="tabText">矿池收益</h4>
       </div>
+      </router-link>
+      <router-link to="/qrcode">
       <div class="tabBox">
         <img src="@/assets/icons/transactions.png" class="tabIcon" />
         <h4 class="tabText">充提记录</h4>
       </div>
+      </router-link>
     </div>
     <div class="margeuTag">
       <div class="rowSB">
@@ -71,12 +78,12 @@
               <h3 class="rateName">
                 <b class="rateActive">{{rate.name}}</b>/SHIN
               </h3>
-              <h3 class="lastRate">综合 123456.78</h3>
+              <!-- <h3 class="lastRate">综合 123456.78</h3> -->
             </div>
           </div>
-          <h4 class="activeRate">{{rate.rate}}</h4>
+          <h4 class="activeRate">{{rate.rate | noToFIxed(8)}}</h4>
           <div class="percentageBox">
-            <h4>{{rate.percentage}} %</h4>
+            <h4>+ {{rate.percentage}} %</h4>
           </div>
         </div>
       </div>
@@ -85,32 +92,77 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   data() {
-    return {
-      exchangeRate: [
-        {
-          name: "BTC",
-          rate: "1234.5678",
-          percentage: "1.23"
-        },
-        {
-          name: "EOS",
-          rate: "1234.5678",
-          percentage: "1.23"
-        },
-        {
-          name: "ETCH",
-          rate: "1234.5678",
-          percentage: "1.23"
-        },
-        {
-          name: "XRP",
-          rate: "1234.5678",
-          percentage: "1.23"
-        }
-      ]
-    };
+    return {};
+  },
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "getLoginStatus",
+      userToken: "getUserToken",
+      userAddress: "getUserAddress",
+      userSAddress: "getUserSAddress",
+      userUID: "getUserUID",
+      accountBalance: "getAccountBalanceSHIN",
+      accountBalanceCYN: "getAccountBalanceCYN",
+      accountBalanceUSDT: "getAccountBalanceUSDT",
+      exchangeRate: "getExchangeValues",
+      userData: "userData"
+    })
+  },
+  methods: {
+    ...mapActions({
+      getAccountBalance: "getAccountBalance",
+      getDataFromCookies: "getDataFromCookies",
+      toggelLoader: "toggelLoader"
+    }),
+    scanPage() {
+      this.$router.push("/scan");
+    },
+
+    copyTestingCode() {
+      let that = this;
+      let testingCodeToCopy = document.querySelector("#walletAddr");
+      console.log(testingCodeToCopy)
+      testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
+      testingCodeToCopy.select();
+      try {
+        var successful = document.execCommand("copy");
+        var msg = successful ? "successful" : "unsuccessful";
+         this.$Message.success({
+          background: true,
+          content: "Wallet Address Copied"
+        });
+      } catch (err) {
+        alert("Oops, unable to copy");
+      }
+
+      /* unselect the range */
+      testingCodeToCopy.setAttribute("type", "hidden");
+      window.getSelection().removeAllRanges();
+    }
+  },
+  watch: {},
+  mounted() {
+    let that = this;
+    if (this.isLoggedIn) {
+      let data = {
+        address: that.userAddress
+      };
+      that.toggelLoader();
+      that
+        .getAccountBalance(data)
+        .then(res => {
+          that.toggelLoader();
+        })
+        .catch(err => {
+          that.toggelLoader();
+        });
+    } else {
+      this.$router.push("auth");
+    }
   }
 };
 </script>
@@ -188,6 +240,14 @@ export default {
   background: rgba(255, 255, 255, 1);
   opacity: 0.04;
   margin-top: 2vh;
+}
+.valueTitle {
+  font-size: 12px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  line-height: 22px;
+  color: rgba(255, 255, 255, 1);
+  opacity: 0.6;
 }
 .lineHor {
   width: 2px;
