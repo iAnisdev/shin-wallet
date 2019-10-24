@@ -21,6 +21,18 @@
       </div>
       <Button size="large" long class="button" @click="transferAmount">划转</Button>
     </div>
+     <Modal
+        v-model="trasactionDone"
+        title="交易成功"
+        ok-text="关闭"
+        cancel-text=" "
+        @on-ok="hidePopup"
+        @on-cancel="hidePopup">
+        <CellGroup>
+                <Cell title="到" :label="walletAddr" />
+                <Cell title="代币数量" :extra="amount" />
+            </CellGroup>
+    </Modal>
   </section>
 </template>
 
@@ -34,7 +46,8 @@ export default {
   data() {
     return {
       walletAddr: "",
-      amount: ""
+      amount: "",
+      trasactionDone: false
     };
   },
   computed: {
@@ -86,6 +99,7 @@ export default {
               background: true,
               content: "交易成功"
             });
+            that.trasactionDone = true
             that.toggelLoader();
           })
           .catch(err => {
@@ -109,6 +123,9 @@ export default {
       } else {
         return true;
       }
+    },
+    hidePopup(){
+      this.$router.push('/home');
     }
   },
   mounted() {

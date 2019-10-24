@@ -33,7 +33,7 @@ export default {
   data() {
     return {
       referCode: "",
-      qrCodeUrl: "https://shin-wallet.herokuapp.com/signup"
+      qrCodeUrl: "https://shin-wallet.herokuapp.com/auth/signup"
     };
   },
   computed: {
@@ -69,7 +69,7 @@ export default {
   },
   mounted() {
     let that = this;
-    let qrCodeUrl = `https://shin-wallet.herokuapp.com/signup?refer=${that.userUID}`;
+    let qrCodeUrl = `https://shin-wallet.herokuapp.com/auth/signup?refer=${that.userUID}`;
     that.qrCodeUrl = qrCodeUrl;
   }
 };
