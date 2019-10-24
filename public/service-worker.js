@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.a5d046e6b435781769ea4d44a371fcba.js"
+  "/precache-manifest.cfc3f0e6b2c571324a5a8b43654f6509.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "shin_wallet"});
