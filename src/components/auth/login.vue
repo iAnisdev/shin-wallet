@@ -56,11 +56,11 @@ export default {
       loginMethod: "username",
       methodList: [
         {
-          label: "Username",
+          label: "用户名登录",
           value: "username"
         },
         {
-          label: "Phone",
+          label: "手机号登录",
           value: "phone"
         }
       ]
