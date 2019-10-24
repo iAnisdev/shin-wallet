@@ -1,6 +1,6 @@
 <template>
   <section class="phonePage">
-    <navbar showBack="'true'" title="Add New Phone" />
+    <navbar showBack="'true'" title="增加新电话号码" />
     <div class="content">
       <Card :bordered="false">
         <div style="margin-top: 2vh">
@@ -29,7 +29,7 @@
             type="success"
             class="recoverBtn"
             @click="addPhoneNumber"
-          >Add Phone</Button>
+          >增加电话号码</Button>
         </div>
       </Card>
     </div>
@@ -77,7 +77,7 @@ export default {
       } else {
         this.$Message.error({
           background: true,
-          content: "Invalid phone number"
+          content: "无效电话号码"
         });
       }
     },
@@ -86,12 +86,12 @@ export default {
       if (!that.isValid(that.phone)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Phone Number"
+          content: "无效电话号码"
         });
       } else if (!that.isValid(that.smsCode)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Verification Code"
+          content: "无效验证码"
         });
       } else {
           that.toggelLoader()

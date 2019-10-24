@@ -24,7 +24,7 @@
           <Button type="primary" class="button" @click="copyTestingCode">复制</Button>
         </span>
       </Input>
-        <input type="hidden" id="walletAddr" :value="walletAddr" />
+      <input type="hidden" id="walletAddr" :value="walletAddr" />
       <ul v-for="(item , index) in uiList" :key="index">
         <li>{{item}}</li>
       </ul>
@@ -47,14 +47,10 @@ export default {
         {
           value: "USDT",
           label: "USDT"
-        },
-        {
-          value: "SHIN",
-          label: "SHIN"
         }
       ],
       selectedType: "ERC20",
-      walletAddr: "0123456789123456789123456789123456",
+      walletAddr: "0x405e49b8ad0f733a0ed5cdb432f2de9b9a6f81e3",
       uiList: [
         "禁止向地址充值当前币种以外的资产，任何充入当前币种地址的非当前币种资产将不可找回。",
         "充值完成后，你可以进入充提记录页面跟踪进度。",
@@ -67,7 +63,6 @@ export default {
     copyTestingCode() {
       let that = this;
       let testingCodeToCopy = document.querySelector("#walletAddr");
-      console.log(testingCodeToCopy);
       testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
       testingCodeToCopy.select();
       try {
@@ -75,12 +70,11 @@ export default {
         var msg = successful ? "successful" : "unsuccessful";
         this.$Message.success({
           background: true,
-          content: "Wallet Address Copied"
+          content: "复制钱包地址"
         });
       } catch (err) {
         alert("Oops, unable to copy");
       }
-
       /* unselect the range */
       testingCodeToCopy.setAttribute("type", "hidden");
       window.getSelection().removeAllRanges();

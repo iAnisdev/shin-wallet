@@ -1,31 +1,25 @@
 <template>
   <section class="loginPage">
-    <navbar showBack="'true'" title="Transfer" />
+    <navbar showBack="'true'" title="划转" />
     <div class="infoBox">
       <div class="tab">
         <h4>可用</h4>
-        <h3>{{accountBalance}}</h3>
+        <h3>{{accountBalance | noToFIxed('6')}}</h3>
       </div>
       <div class="lineHR"></div>
       <div class="tab">
         <h4>折合（CNY)</h4>
-        <h3>≈{{accountBalanceCYN}}</h3>
+        <h3>≈{{accountBalanceCYN | noToFIxed('6')}}</h3>
       </div>
     </div>
     <div class="widthdrawTable">
       <div style="margin-top: 1vh">
-        <Input
-          prefix="md-card"
-          v-model="walletAddr"
-          placeholder="Wallet Address"
-          readonly
-          size="large"
-        />
+        <Input prefix="md-card" v-model="walletAddr" placeholder="输入钱包地址" size="large" />
       </div>
       <div style="margin-top: 1vh">
-        <Input prefix="logo-usd" v-model="amount" placeholder="提现说明 (可选)" size="large" />
+        <Input prefix="logo-usd" v-model="amount" placeholder="输入金额" size="large" />
       </div>
-      <Button size="large" long class="button" @click="transferAmount">确定</Button>
+      <Button size="large" long class="button" @click="transferAmount">划转</Button>
     </div>
   </section>
 </template>
@@ -57,24 +51,25 @@ export default {
   methods: {
     ...mapActions({
       toggelLoader: "toggelLoader",
-      transferAmount: "transferAmount"
+      transferAmountToWallet: "transferAmount",
+      getAccountBalance: "getAccountBalance"
     }),
     transferAmount() {
       let that = this;
       if (!that.isValid(that.walletAddr)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Wallet Address"
+          content: "输入钱包地址"
         });
       } else if (!that.isValid(that.amount)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Amount"
+          content: "无效金额"
         });
       } else if (that.amount > that.accountBalance) {
         this.$Message.error({
           background: true,
-          content: "Invalid Amount"
+          content: "无效金额"
         });
       } else {
         let data = {
@@ -83,6 +78,24 @@ export default {
           to: that.walletAddr,
           amount: that.amount
         };
+        that.toggelLoader();
+        that
+          .transferAmountToWallet(data)
+          .then(res => {
+            this.$Message.success({
+              background: true,
+              content: "交易成功"
+            });
+            that.toggelLoader();
+          })
+          .catch(err => {
+            that.toggelLoader();
+            console.log("transferAmountToWallet err", err);
+            this.$Message.error({
+              background: true,
+              content: err.message
+            });
+          });
       }
     },
     isValid(value) {
@@ -101,7 +114,25 @@ export default {
   mounted() {
     let that = this;
     let walletAddr = this.$router.history.current.query.wallet;
-    that.walletAddr = walletAddr;
+    if (walletAddr) {
+      that.walletAddr = walletAddr;
+    }
+    if (that.isLoggedIn) {
+      let data = {
+        address: that.userAddress
+      };
+      that.toggelLoader();
+      that
+        .getAccountBalance(data)
+        .then(res => {
+          that.toggelLoader();
+        })
+        .catch(err => {
+          that.toggelLoader();
+        });
+    } else {
+      this.$router.push("auth");
+    }
   }
 };
 </script>

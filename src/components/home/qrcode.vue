@@ -46,7 +46,7 @@ export default {
         var msg = successful ? "successful" : "unsuccessful";
          this.$Message.success({
           background: true,
-          content: "Wallet Address Copied"
+          content: "复制钱包地址"
         });
       } catch (err) {
         alert("Oops, unable to copy");
@@ -74,7 +74,6 @@ export default {
 .qrcodeCard {
   margin: auto;
   width: 316px;
-  height: 360px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;

@@ -5,40 +5,40 @@
         <div class="rowSB">
           <h3 class="name">{{userData.username}}</h3>
           <router-link to="/qrcode">
-          <v-icon name="qrcode" scale="1.2"></v-icon>
+            <v-icon name="qrcode" scale="1.2"></v-icon>
           </router-link>
         </div>
         <div class="rowFS">
           <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')}}</h5>
-        <input type="hidden" id="walletAddr" :value="userAddress" />
-          <Icon type="md-copy" size="20"  @click="copyTestingCode"/>
+          <input type="hidden" id="walletAddr" :value="userAddress" />
+          <Icon type="md-copy" size="20" @click="copyTestingCode" />
         </div>
       </div>
     </div>
     <div class="cellGroup">
       <router-link to="/changePassword">
-        <div class="cellWithArrow" >
-        <div class="rowFS">
-          <img src="@/assets/me/lock.png" alt class="cellImg" />
-          <h4 class="cellTitle">交易密码</h4>
+        <div class="cellWithArrow">
+          <div class="rowFS">
+            <img src="@/assets/me/lock.png" alt class="cellImg" />
+            <h4 class="cellTitle">交易密码</h4>
+          </div>
+          <div class="rowFS">
+            <h5 class="cellExtra">未设置</h5>
+            <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
+          </div>
         </div>
-        <div class="rowFS">
-          <h5 class="cellExtra">未设置</h5>
-          <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
-        </div>
-      </div>
       </router-link>
       <div class="cellLine"></div>
       <router-link to="/phone">
-      <div class="cell">
-        <div class="rowFS">
-          <img src="@/assets/me/phone.png" alt class="cellImg" />
-          <h4 class="cellTitle">绑定手机</h4>
+        <div class="cell">
+          <div class="rowFS">
+            <img src="@/assets/me/phone.png" alt class="cellImg" />
+            <h4 class="cellTitle">绑定手机</h4>
+          </div>
+          <div class="rowFS">
+            <h5 class="cellExtra">已绑定</h5>
+          </div>
         </div>
-        <div class="rowFS">
-          <h5 class="cellExtra">已绑定</h5>
-        </div>
-      </div>
       </router-link>
     </div>
     <div class="cellGroup">
@@ -52,16 +52,18 @@
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
       </div>
-      <div class="cellLine"></div> -->
-      <div class="cellWithArrow">
-        <div class="rowFS">
-          <img src="@/assets/me/refer.png" alt class="cellImg" />
-          <h4 class="cellTitle">邀请好友</h4>
+      <div class="cellLine"></div>-->
+      <router-link to="/refer">
+        <div class="cellWithArrow">
+          <div class="rowFS">
+            <img src="@/assets/me/refer.png" alt class="cellImg" />
+            <h4 class="cellTitle">邀请好友</h4>
+          </div>
+          <div class="rowFS">
+            <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
+          </div>
         </div>
-        <div class="rowFS">
-          <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
-        </div>
-      </div>
+      </router-link>
       <div class="cellLine"></div>
       <div class="cellWithArrow">
         <div class="rowFS">
@@ -83,7 +85,7 @@
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
       </div>
-      <div class="cellLine"></div> -->
+      <div class="cellLine"></div>-->
       <!-- <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/translate.png" alt class="cellImg" />
@@ -117,9 +119,9 @@
       </div>
     </div>
     <div class="cellGroup">
-      <div class="logoutCell">
+      <div class="logoutCell" @click="logout">
         <img src="@/assets/me/logout.png" alt class="cellImg" />
-          <h4 class="cellTitle">安全退出</h4>
+        <h4 class="cellTitle">安全退出</h4>
       </div>
     </div>
   </section>
@@ -128,12 +130,10 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  data(){
-    return {
-      
-    }
+  data() {
+    return {};
   },
-  computed:{
+  computed: {
     ...mapGetters({
       userData: "userData",
       isLoggedIn: "getLoginStatus",
@@ -143,12 +143,13 @@ export default {
       userUID: "getUserUID"
     })
   },
-  methods:{
+  methods: {
     ...mapActions({
       getAccountBalance: "getAccountBalance",
       getDataFromCookies: "getDataFromCookies",
       toggelLoader: "toggelLoader",
-      getUserData: "getUserData"
+      getUserData: "getUserData",
+      logoutUser: "logoutUser"
     }),
     copyTestingCode() {
       let that = this;
@@ -158,9 +159,9 @@ export default {
       try {
         var successful = document.execCommand("copy");
         var msg = successful ? "successful" : "unsuccessful";
-         this.$Message.success({
+        this.$Message.success({
           background: true,
-          content: "Wallet Address Copied"
+          content: "复制钱包地址"
         });
       } catch (err) {
         alert("Oops, unable to copy");
@@ -169,13 +170,19 @@ export default {
       /* unselect the range */
       testingCodeToCopy.setAttribute("type", "hidden");
       window.getSelection().removeAllRanges();
+    },
+    logout() {
+      let that = this;
+      that.logoutUser().then(res => {
+        that.$router.push("/auth");
+      });
     }
   },
-  mounted(){
-      let that = this;
+  mounted() {
+    let that = this;
     let data = {
-      token : that.userToken
-    }
+      token: that.userToken
+    };
     this.getUserData(data);
   }
 };
@@ -300,7 +307,7 @@ export default {
   border: 1px solid rgba(0, 0, 0, 1);
   opacity: 0.08;
 }
-.logoutCell{
+.logoutCell {
   display: flex;
   flex-direction: row;
   justify-content: center;

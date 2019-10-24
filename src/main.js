@@ -10,10 +10,11 @@ import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 import './plugins/filters'
 import VueQrcodeReader from "vue-qrcode-reader";
+import underscore from 'vue-underscore';
 
 Vue.use(VueQrcodeReader);
 Vue.component('v-icon', Icon)
-
+Vue.use(underscore);
 Vue.use(VTabBar)
 
 Vue.config.productionTip = false

@@ -6,7 +6,7 @@
         <img src="@/assets/scan.png" class="tabIcon" @click="scanPage" />
       </div>
       <div class="rowFS">
-        <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('8')}}</h5>
+        <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')}}</h5>
         <input type="hidden" id="walletAddr" :value="userAddress" />
         <Icon type="md-copy" size="20" @click="copyTestingCode" />
       </div>
@@ -33,10 +33,12 @@
       </div>
     </div>
     <div class="midbarBox">
+      <router-link to="/refer">
       <div class="tabBox">
         <img src="@/assets/icons/invite.png" class="tabIcon" />
         <h4 class="tabText">邀请好友</h4>
       </div>
+      </router-link>
       <router-link to="/buy">
       <div class="tabBox">
         <img src="@/assets/icons/addTokens.png" class="tabIcon" />
@@ -49,7 +51,7 @@
         <h4 class="tabText">矿池收益</h4>
       </div>
       </router-link>
-      <router-link to="/qrcode">
+      <router-link to="/transfer">
       <div class="tabBox">
         <img src="@/assets/icons/transactions.png" class="tabIcon" />
         <h4 class="tabText">充提记录</h4>
@@ -67,9 +69,7 @@
     </div>
     <div class="echangeRateBox">
       <div class="rowFS">
-        <h2 class="poolTitle">现货行情</h2>
-        <div class="poolLine"></div>
-        <h3 class="poolInfo">高频交易，赚钱快</h3>
+        <h2 class="poolTitle">行情</h2>
       </div>
       <div class="rateList" v-for="(rate , index) in exchangeRate" :key="index">
         <div class="rateBar">
@@ -125,7 +125,6 @@ export default {
     copyTestingCode() {
       let that = this;
       let testingCodeToCopy = document.querySelector("#walletAddr");
-      console.log(testingCodeToCopy)
       testingCodeToCopy.setAttribute("type", "text"); // 不是 hidden 才能複製
       testingCodeToCopy.select();
       try {
@@ -133,12 +132,11 @@ export default {
         var msg = successful ? "successful" : "unsuccessful";
          this.$Message.success({
           background: true,
-          content: "Wallet Address Copied"
+          content: "复制钱包地址"
         });
       } catch (err) {
         alert("Oops, unable to copy");
       }
-
       /* unselect the range */
       testingCodeToCopy.setAttribute("type", "hidden");
       window.getSelection().removeAllRanges();

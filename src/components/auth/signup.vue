@@ -98,43 +98,54 @@ export default {
       if (!that.isValid(that.userName)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Username"
+          content: "无效用户名"
         });
       } else if (!that.isValid(that.phone)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Phone number"
+          content: "无效电话号码"
         });
       } else if (!that.isValid(that.smsCode)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Verification Code"
+          content: "无效SMS 代码"
+        });
+      } else if (!that.isValid(that.smsverify)) {
+        this.$Message.error({
+          background: true,
+          content: "无效验证码"
         });
       } else if (!that.isValid(that.password)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Password"
+          content: "无效密码"
+        });
+      } else if (!that.isValid(that.refer)) {
+        this.$Message.error({
+          background: true,
+          content: "无效复用代码"
         });
       } else {
         let data = {
           username: that.userName,
-          country: '86',
+          country: "86",
           phone: that.phone,
           smscode: that.smsCode,
           smsverify: that.smsverify,
           refer: that.refer,
           password: that.password
         };
-        console.log(data);
         that.toggelLoader();
         that
           .userRegister(data)
           .then(res => {
-            console.log(res);
             that.toggelLoader();
           })
           .catch(err => {
-            console.log("userRegister error ", err);
+            this.$Message.error({
+              background: true,
+              content: err.message
+            });
             that.toggelLoader();
           });
       }

@@ -17,6 +17,7 @@ import changePassword from './views/changePassword.vue'
 import phone from './views/phones.vue'
 import addPhone from './views/addphone.vue'
 import transfer from './views/transfer.vue'
+import refer from './views/refer.vue'
 
 //auth
 import Auth from './views/Auth.vue'
@@ -155,6 +156,12 @@ const router = new Router({
       path: '/transfer',
       name: 'transfer',
       component: transfer,
+    },
+    {
+      path: '/refer',
+      name: 'refer',
+      component: refer,
+      beforeEnter: requireAuth,
     },
     // redirect views
     {

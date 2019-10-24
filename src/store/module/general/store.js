@@ -8,6 +8,7 @@ Vue.use(Vuex)
 
 const state = {
     showLoader: false,
+    currentTran: {}
 }
 
 export default {

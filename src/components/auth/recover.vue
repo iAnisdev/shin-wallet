@@ -75,6 +75,7 @@ export default {
   methods: {
     ...mapActions({
       sendSMSCode: "sendSMSCode",
+      userLogin: "userLogin",
       changePassword: "changePassword",
       toggelLoader: "toggelLoader"
     }),
@@ -93,7 +94,7 @@ export default {
       } else {
         this.$Message.error({
           background: true,
-          content: "Invalid phone number"
+          content: "无效电话号码"
         });
       }
     },
@@ -102,24 +103,25 @@ export default {
       if (!that.isValid(that.smsCode)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Verification Code"
+          content: "无效验证码"
         });
       } else if (!that.isValid(that.password)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Password"
+          content: "无效密码"
         });
       } else if (!that.isValid(that.cpassword)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Password"
+          content: "无效密码"
         });
       } else if (that.password !== that.cpassword) {
         this.$Message.error({
           background: true,
-          content: "Password didn't match"
+          content: "密码不匹配"
         });
       } else {
+        that.toggelLoader();
         let data = {
           phone: that.phone,
           smscode: that.smsCode,
@@ -129,14 +131,20 @@ export default {
         that
           .changePassword(data)
           .then(res => {
-            console.log(res);
+            return that.userLogin({
+              phone: data.phone,
+              password: data.new
+            });
+          })
+          .then(res => {
+            that.toggelLoader();
             this.$Message.success({
               background: true,
-              content: "Password Updated"
+              content: "更新密码"
             });
-            that.$router.push('/login')
           })
           .catch(err => {
+            that.toggelLoader();
             this.$Message.error({
               background: true,
               content: err.message

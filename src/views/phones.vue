@@ -1,6 +1,6 @@
 <template>
   <section class="phonePage">
-    <navbar showBack="'true'" title="Registed Phone Numbers" />
+    <navbar showBack="'true'" title="无效金额" />
     <div class="content">
       <Card
         :bordered="false"
@@ -56,7 +56,7 @@ export default {
           that.toggelLoader();
           that.$Message.success({
             background: true,
-            content: "Phone Number deleted"
+            content: "删除电话号码"
           });
           this.getUserData({token: that.userToken});
         })

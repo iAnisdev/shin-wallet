@@ -21,15 +21,17 @@ export const getUserData = ({ commit, dispatch }, data) => {
 export const getDataFromCookies = ({ commit, dispatch }) => {
     try {
         let userToken = Cookies.getCookies('x-auth-tok')
-        let address = Cookies.getCookies('x-address')
-        let saddress = Cookies.getCookies('x-saddress')
-        let uid = Cookies.getCookies('x-uid')
-        commit('SET_LOGIN_STATUS', true)
-        commit('SET_USER_TOKEN', userToken)
-        commit('SET_USER_ADDRESS', address)
-        commit('SET_USER_SADDRESS', saddress)
-        commit('SET_USER_UID', uid)
-        dispatch('getUserData' , {token: userToken})
+        if(userToken){
+            let address = Cookies.getCookies('x-address')
+            let saddress = Cookies.getCookies('x-saddress')
+            let uid = Cookies.getCookies('x-uid')
+            commit('SET_LOGIN_STATUS', true)
+            commit('SET_USER_TOKEN', userToken)
+            commit('SET_USER_ADDRESS', address)
+            commit('SET_USER_SADDRESS', saddress)
+            commit('SET_USER_UID', uid)
+            dispatch('getUserData' , {token: userToken})
+        }
     } catch (e) {
         console.log(e)
     }

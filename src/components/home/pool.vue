@@ -4,7 +4,7 @@
       <div class="walletInfoCard">
         <div class="col">
           <h4 class="yesterday">昨日收益（SHIN）</h4>
-          <h3 class="yesterdayAmount">0</h3>
+          <h3 class="yesterdayAmount">{{totalEarning }}</h3>
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
@@ -67,33 +67,33 @@
     </div>
     <Modal
       v-model="showToPoolModel"
-      title="Transfer to Pool"
+      title="划转到矿池"
       @on-ok="transferToPool"
-      ok-text="Transfer"
+      ok-text="划转"
       @on-cancel="showToPool"
       :closable="closable"
     >
       <div class="popupHeadings">
-        <h5>Enter Amount to Transfer</h5>
-        <h6>Account Balance: {{checkingAddBalance}}</h6>
-        <h6>Minimum Balance: 100 SHIN</h6>
+        <h5>输入划转金额</h5>
+        <h6>输入划转金额: {{checkingAddBalance}}</h6>
+        <h6>最少: 100 SHIN</h6>
       </div>
-      <Input v-model="amountToPool" type="number" prefix="logo-usd" placeholder="Enter Amount" />
+      <Input v-model="amountToPool" type="number" prefix="logo-usd" placeholder="输入划转金额" />
       <h6 class="errorMsg">{{amountToPoolError}}</h6>
     </Modal>
     <Modal
       v-model="showOutOfPoolModel"
-      title="Transfer Out of Pool"
-      ok-text="Transfer Out"
+      title="输入划转金额"
+      ok-text="转出"
       @on-ok="transferFromPool"
       @on-cancel="showOutofPool"
       :closable="closable"
     >
       <div class="popupHeadings">
-        <h5>Enter Amount to Transfer Out</h5>
+        <h5>输入划转金额</h5>
         <h6>Pool Balance: {{savingAddBalance}}</h6>
       </div>
-      <Input v-model="amountoutOfPool" type="number" prefix="logo-usd" placeholder="Enter Amount" />
+      <Input v-model="amountoutOfPool" type="number" prefix="logo-usd" placeholder="输入划转金额" />
       <h6 class="errorMsg">{{amountOutOfPoolError}}</h6>
     </Modal>
   </section>
@@ -101,6 +101,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { _ } from "vue-underscore";
 export default {
   data() {
     return {
@@ -111,9 +112,12 @@ export default {
       totalWalletAsset: 0,
       amountToPool: 0,
       amountoutOfPool: 0,
+      totalEarning: 0,
       amountToPoolError: "",
       amountOutOfPoolError: "",
-      closable: true
+      closable: true,
+      transactionStakeReward: [],
+      transactionSalesReward: []
     };
   },
   computed: {
@@ -130,7 +134,8 @@ export default {
     ...mapActions({
       getWalletBalanceByAddress: "getWalletBalanceByAddress",
       toggelLoader: "toggelLoader",
-      transferAmount: 'transferAmount'
+      transferAmount: "transferAmount",
+      transactionsList: "transactionsList"
     }),
     getUserWalletStates() {
       let that = this;
@@ -159,7 +164,6 @@ export default {
           that.toggelLoader();
         });
     },
-
     showToPool() {
       this.showToPoolModel = !this.showToPoolModel;
     },
@@ -167,7 +171,6 @@ export default {
       this.showOutOfPoolModel = !this.showOutOfPoolModel;
     },
     transferToPool() {
-      console.log('transferToPool called')
       let that = this;
       if (that.amountToPoolError !== "" || that.amountToPool == 0) {
         setTimeout(function() {
@@ -176,29 +179,77 @@ export default {
       } else {
         let data = {
           token: that.userToken,
-          from : that.userAddress,
+          from: that.userAddress,
           to: that.userSAddress,
           amount: that.amountToPool
-        }
-        console.log(data)
+        };
+        that
+          .transferAmount(data)
+          .then(res => {
+            this.$Message.success({
+              background: true,
+              content: "交易成功"
+            });
+            that.getUserWalletStates();
+          })
+          .catch(err => {
+            this.$Message.error({
+              background: true,
+              content: err.message
+            });
+          });
       }
     },
     transferFromPool() {
-      console.log('transferFromPool called')
+      console.log("transferFromPool called");
       let that = this;
       if (that.amountOutOfPoolError !== "" || that.amountoutOfPool == 0) {
         setTimeout(function() {
           that.showOutOfPoolModel = true;
         }, 10);
       } else {
-         let data = {
+        let data = {
           token: that.userToken,
-          to : that.userAddress,
+          to: that.userAddress,
           from: that.userSAddress,
-          amount: that.amountToPool
-        }
-        console.log(data)
+          amount: that.amountoutOfPool
+        };
+        that
+          .transferAmount(data)
+          .then(res => {
+            this.$Message.success({
+              background: true,
+              content: "交易成功"
+            });
+            that.getUserWalletStates();
+          })
+          .catch(err => {
+            this.$Message.error({
+              background: true,
+              content: err.message
+            });
+          });
       }
+    },
+    getYesterDayRewards() {
+      let that = this;
+      let transactionStakeReward = that.transactionStakeReward;
+      let transactionSalesReward = that.transactionSalesReward;
+      let amountList = [];
+      _.each(transactionStakeReward, function(trans) {
+        amountList.push(trans.amount);
+      });
+      _.each(transactionSalesReward, function(trans) {
+        amountList.push(trans.amount);
+      });
+      let totalEarning = _.reduce(
+        amountList,
+        function(memo, num) {
+          return Number(memo) + Number(num);
+        },
+        0
+      );
+      that.totalEarning = totalEarning;
     }
   },
   watch: {
@@ -206,11 +257,11 @@ export default {
       let that = this;
       if (newVal) {
         if (newVal < 100) {
-          that.amountToPoolError = "Minimum Amount is 100";
+          that.amountToPoolError = "最少: 100";
         } else {
           let checkingAddBalance = that.checkingAddBalance;
-          if (newVal > checkingAddBalance) {
-            that.amountToPoolError = "Invalid Amount";
+          if (newVal > Number(checkingAddBalance)) {
+            that.amountToPoolError = "无效金额";
           } else {
             that.amountToPoolError = "";
           }
@@ -221,8 +272,8 @@ export default {
       let that = this;
       if (newVal) {
         let savingAddBalance = that.savingAddBalance;
-        if (newVal > savingAddBalance) {
-          that.amountOutOfPoolError = "Invalid Amount";
+        if (newVal > Number(savingAddBalance)) {
+          that.amountOutOfPoolError = "无效金额";
         } else {
           that.amountOutOfPoolError = "";
         }
@@ -230,7 +281,28 @@ export default {
     }
   },
   mounted() {
+    let that = this;
     this.getUserWalletStates();
+    let data = {
+      address: that.userAddress,
+      type: "stakereward"
+    };
+    that
+      .transactionsList(data)
+      .then(stakereward => {
+        that.transactionStakeReward = stakereward.result;
+        return that.transactionsList({
+          address: that.userAddress,
+          type: "salesreward"
+        });
+      })
+      .then(salesreward => {
+        that.transactionSalesReward = salesreward.result;
+        that.getYesterDayRewards();
+      })
+      .catch(err => {
+        console.log("error ", err);
+      });
   }
 };
 </script>

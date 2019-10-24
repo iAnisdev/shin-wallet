@@ -78,46 +78,50 @@ export default {
     }),
     login() {
       let that = this;
-      let data = {
-
-      }
+      let data = {};
       let loginMethod = that.loginMethod;
       if (loginMethod == "username") {
         if (!that.isValid(that.userName)) {
           this.$Message.error({
             background: true,
-            content: "Invalid Username"
+            content: "无效用户名"
           });
           return;
-        }else{
-          data.username = that.userName
+        } else {
+          data.username = that.userName;
         }
       } else {
         if (!that.isValid(that.phone)) {
           this.$Message.error({
             background: true,
-            content: "Invalid Phone Number"
+            content: "无效电话号码"
           });
           return;
-        }else{
-          data.phone = that.phone
-          data.country = '86'
+        } else {
+          data.phone = that.phone;
+          data.country = "86";
         }
       }
       if (!that.isValid(that.password)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Password"
+          content: "无效密码"
         });
       } else {
-        data.password = that.password
+        data.password = that.password;
+        that.toggelLoader();
+        that
+          .userLogin(data)
+          .then(res => {
             that.toggelLoader();
-        that.userLogin(data).then((res) => {
+          })
+          .catch(err => {
             that.toggelLoader();
-        }).catch((err) => {
-            that.toggelLoader();
-          console.log(err)
-        })
+            this.$Message.error({
+              background: true,
+              content: err.message
+            });
+          });
       }
     },
     isValid(value) {

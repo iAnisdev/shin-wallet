@@ -24,13 +24,7 @@
             size="large"
           />
         </div>
-        <Button
-          long
-          size="large"
-          type="success"
-          class="recoverBtn"
-          @click="updatePassword"
-        >更新密码</Button>
+        <Button long size="large" type="success" class="recoverBtn" @click="updatePassword">更新密码</Button>
       </div>
     </div>
   </section>
@@ -66,22 +60,22 @@ export default {
       if (!that.isValid(that.old)) {
         this.$Message.error({
           background: true,
-          content: "Invalid old Password"
+          content: "无效密码"
         });
       } else if (!that.isValid(that.newPassword)) {
         this.$Message.error({
           background: true,
-          content: "Invalid New Password"
+          content: "无效密码"
         });
       } else if (!that.isValid(that.cpassword)) {
         this.$Message.error({
           background: true,
-          content: "Invalid Confirm Password"
+          content: "无效密码"
         });
       } else if (that.newPassword !== that.cpassword) {
         this.$Message.error({
           background: true,
-          content: "Password didn't match"
+          content: "密码不匹配"
         });
       } else {
         let data = {
@@ -95,7 +89,7 @@ export default {
             console.log(res);
             this.$Message.success({
               background: true,
-              content: "Password Updated"
+              content: "更新密码"
             });
             that.$router.push("/me");
           })

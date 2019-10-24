@@ -20,6 +20,7 @@
     "vue-qrcode": "^0.2.2",
     "vue-qrcode-reader": "^2.1.1",
     "vue-router": "^3.0.3",
+    "vue-underscore": "^0.1.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
