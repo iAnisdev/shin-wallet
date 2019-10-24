@@ -1,6 +1,6 @@
 <template>
   <section>
-    <navbar showBack="'true'" title="邀请朋友" />
+    <navbar showBack="'true'" title="邀请好友" />
     <h1 class="title">ShareIN</h1>
     <h4>币币交易+合约交易+挖扩新纪元</h4>
     <div class="qrcodeCard">
@@ -9,7 +9,7 @@
           <h1 class="referenceCodeTitle">我的邀请码</h1>
           <h2 class="referCode">{{userUID}}</h2>
           <div style="margin-top: 2vh">
-              <Button type="warning" size="large" long @click="copyTestingCode">复制邀请码</Button>
+            <Button type="warning" size="large" long @click="copyTestingCode">复制邀请码</Button>
           </div>
         </div>
         <input type="hidden" id="userUID" :value="userUID" />
@@ -56,7 +56,7 @@ export default {
         var msg = successful ? "successful" : "unsuccessful";
         this.$Message.success({
           background: true,
-          content: "复制邀请朋友"
+          content: "复制邀请码"
         });
       } catch (err) {
         alert("Oops, unable to copy");
@@ -67,10 +67,10 @@ export default {
       window.getSelection().removeAllRanges();
     }
   },
-  mounted(){
-    let that = this
-    let qrCodeUrl = `https://shin-wallet.herokuapp.com/signup?refer=${that.userUID}`
-    that.qrCodeUrl = qrCodeUrl
+  mounted() {
+    let that = this;
+    let qrCodeUrl = `https://shin-wallet.herokuapp.com/signup?refer=${that.userUID}`;
+    that.qrCodeUrl = qrCodeUrl;
   }
 };
 </script>
@@ -117,8 +117,8 @@ export default {
   font-family: PingFang SC;
   font-weight: bolder;
   line-height: 60px;
-color:rgba(0,0,0,1);
-opacity:0.4;
+  color: rgba(0, 0, 0, 1);
+  opacity: 0.4;
 }
 .referCode {
   font-size: 48px;
@@ -132,8 +132,8 @@ opacity:0.4;
   text-align: center;
 }
 .qrcode {
-  width: 90%;
-  height: 44vh;
+  width: 256px;
+  height: 256px;
   margin: auto;
 }
 </style>

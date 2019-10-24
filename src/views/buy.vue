@@ -126,8 +126,8 @@ export default {
   padding: 2% 2%;
 }
 .qrcode {
-  width: 100%;
-  height: 85%;
+  width: 256px;
+  height: 256px;
   margin: auto;
 }
 .qrcodeBox h4 {

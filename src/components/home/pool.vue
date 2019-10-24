@@ -76,7 +76,7 @@
       <div class="popupHeadings">
         <h5>输入划转金额</h5>
         <h6>输入划转金额: {{checkingAddBalance}}</h6>
-        <h6>最少: 100 SHIN</h6>
+        <h6>最少数量: 100 SHIN</h6>
       </div>
       <Input v-model="amountToPool" type="number" prefix="logo-usd" placeholder="输入划转金额" />
       <h6 class="errorMsg">{{amountToPoolError}}</h6>
@@ -91,7 +91,7 @@
     >
       <div class="popupHeadings">
         <h5>输入划转金额</h5>
-        <h6>Pool Balance: {{savingAddBalance}}</h6>
+        <h6>矿池余额: {{savingAddBalance}}</h6>
       </div>
       <Input v-model="amountoutOfPool" type="number" prefix="logo-usd" placeholder="输入划转金额" />
       <h6 class="errorMsg">{{amountOutOfPoolError}}</h6>

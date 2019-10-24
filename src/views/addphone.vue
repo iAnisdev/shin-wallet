@@ -1,6 +1,6 @@
 <template>
   <section class="phonePage">
-    <navbar showBack="'true'" title="增加新电话号码" />
+    <navbar showBack="'true'" title="添加手机号" />
     <div class="content">
       <Card :bordered="false">
         <div style="margin-top: 2vh">
@@ -18,7 +18,7 @@
               <Icon type="ios-key-outline" />
             </span>
             <span slot="append" class="sendSMSBtn">
-              <Button @click="sendCode">获取验证码</Button>
+              <Button @click="sendCode">添加手机号</Button>
             </span>
           </Input>
         </div>

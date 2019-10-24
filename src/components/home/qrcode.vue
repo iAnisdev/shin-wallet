@@ -99,8 +99,8 @@ opacity:1;
   text-align: center;
 }
 .qrcode{
-  width: 90%;
-  height: 44vh;
+  width: 256px;
+  height: 256px;
   margin: auto;
 }
 </style>

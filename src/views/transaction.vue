@@ -23,7 +23,7 @@
         </div>
         <div class="content" v-if="transactionTostake.length == 0">
           <Card :bordered="false" style="margin-top: 1vh">
-            <h3>没有这样交易</h3>
+            <h3>无法查询到该笔交易</h3>
           </Card>
         </div>
       </TabPane>
@@ -54,7 +54,7 @@
         </div>
         <div class="content" v-if="transactionFromStake.length == 0">
           <Card :bordered="false" style="margin-top: 1vh">
-            <h3>没有这样交易</h3>
+            <h3>无法查询到该笔交易</h3>
           </Card>
         </div>
       </TabPane>

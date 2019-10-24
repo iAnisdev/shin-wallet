@@ -1,6 +1,6 @@
 <template>
   <section class="phonePage">
-    <navbar showBack="'true'" title="无效金额" />
+    <navbar showBack="'true'" title="注册手机号" />
     <div class="content">
       <Card
         :bordered="false"
