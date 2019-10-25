@@ -50,13 +50,13 @@
           <img src="@/assets/pool/minepool.png" class="functionIcon" />
         </div>
         <div class="lineHR"></div>
-        <router-link to="/transaction" class="function bdTP">
+        <div class="function bdTP">
           <div class="col">
             <h3 class="functionTitle">记录</h3>
             <h3 class="functionInfo">收益明细</h3>
           </div>
           <img src="@/assets/pool/record.png" class="functionIcon" />
-        </router-link>
+        </div>
       </div>
     </div>
     <div class="chartBox">

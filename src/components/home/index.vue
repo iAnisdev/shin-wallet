@@ -23,7 +23,7 @@
           <div class="col">
             <h4 class="valueTitle">总资产折合（CNY)</h4>
             <h3>{{accountBalanceCYN | noToFIxed('6')}}</h3>
-          </div> -->
+          </div>-->
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
@@ -58,7 +58,7 @@
           <h4 class="tabText">矿池收益</h4>
         </div>
       </router-link>
-      <router-link to="/transfer">
+      <router-link to="/transaction">
         <div class="tabBox">
           <img src="@/assets/icons/transactions.png" class="tabIcon" />
           <h4 class="tabText">充提记录</h4>
@@ -211,7 +211,7 @@ export default {
           } else {
             that.getYesterDayMineRewards = 0;
           }
-          that.getTotalEarning()
+          that.getTotalEarning();
         })
         .catch(err => {
           that.toggelLoader();
@@ -236,7 +236,7 @@ export default {
           return that.transactionsList(promotionData);
         })
         .then(pres => {
-          console.log('pres' , pres)
+          console.log("pres", pres);
           that.promotionsRewards = pres.result;
           let amountList = [];
           _.each(that.stakingRewards, function(trans) {
@@ -253,7 +253,7 @@ export default {
             },
             0
           );
-          that.totalEarningUSDT = totalEarning
+          that.totalEarningUSDT = totalEarning;
           that.toggelLoader();
         })
         .catch(err => {
@@ -265,7 +265,7 @@ export default {
   mounted() {
     let that = this;
     if (this.isLoggedIn) {
-      that.toggelLoader()
+      that.toggelLoader();
       that.getUserData({
         token: that.userToken
       });

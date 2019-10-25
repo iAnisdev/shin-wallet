@@ -102,7 +102,7 @@
       <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/share.png" alt class="cellImg" />
-          <h4 class="cellTitle">SHIN充提币全教程</h4>
+          <h4 class="cellTitle">APP分享</h4>
         </div>
         <div class="rowFS">
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
@@ -113,7 +113,7 @@
       <div class="cell">
         <div class="rowFS">
           <img src="@/assets/me/message.png" alt class="cellImg" />
-          <h4 class="cellTitle">SHIN充提币全教程</h4>
+          <h4 class="cellTitle">客服邮箱</h4>
         </div>
         <div class="rowFS">
           <h5 class="cellExtra">SHIN@sharein.io</h5>
