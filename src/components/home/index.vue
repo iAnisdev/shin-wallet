@@ -19,11 +19,11 @@
             <h4 class="valueTitle">总资产折合（SHIN)</h4>
             <h3>{{totalWalletAssets | noToFIxed('6')}}</h3>
           </div>
-          <div class="lineHor"></div>
+          <!-- <div class="lineHor"></div>
           <div class="col">
             <h4 class="valueTitle">总资产折合（CNY)</h4>
             <h3>{{accountBalanceCYN | noToFIxed('6')}}</h3>
-          </div>
+          </div> -->
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
@@ -226,12 +226,13 @@ export default {
       that
         .transactionsList(data)
         .then(res => {
-          console.log('res' , res)
+          // console.log('res' , res)
           that.stakingRewards = res.result;
           let promotionData = {
             address: that.userAddress,
             type: "promotion"
           };
+          // console.log(that.userAddress , '4677d25f5753b461d96365ea4d964813f5c5c597' )
           return that.transactionsList(promotionData);
         })
         .then(pres => {
@@ -244,7 +245,7 @@ export default {
           _.each(that.promotionsRewards, function(trans) {
             amountList.push(trans.amount);
           });
-          console.log('amountList ' , amountList)
+          // console.log('amountList ' , amountList)
           let totalEarning = _.reduce(
             amountList,
             function(memo, num) {

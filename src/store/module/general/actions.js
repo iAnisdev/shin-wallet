@@ -8,7 +8,7 @@ export const toggelLoader = ({ commit, dispatch }, data) => {
     commit('SET_LOADER_STATUS')
 }
 export const setCurrentTransaction = ({ commit, dispatch }, data) => {
-    commit('SET_CURRENT_TRANSACTION' , data)
+    commit('SET_CURRENT_TRANSACTION', data)
     return new Promise.resolve()
 }
 export const calculateExchange = ({ commit, dispatch }, data) => {
