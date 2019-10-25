@@ -1,31 +1,33 @@
 <template>
   <div id="app">
-    <loader v-if="showLoaderStatus"/>
+    <loader v-if="showLoaderStatus" />
     <router-view />
   </div>
 </template>
 
 <script>
-import {mapGetters , mapActions } from 'vuex'
-import loader from '@/components/shared/loaders.vue'
+import { mapGetters, mapActions } from "vuex";
+import loader from "@/components/shared/loaders.vue";
 export default {
   name: "app",
-  components:{
+  components: {
     loader
   },
-  computed:{
+  computed: {
     ...mapGetters({
-      showLoaderStatus: 'showLoaderStatus'
-    }),
+      showLoaderStatus: "showLoaderStatus"
+    })
   },
   methods: {
     ...mapActions({
-      getDataFromCookies: 'getDataFromCookies'
+      getDataFromCookies: "getDataFromCookies",
+      getSHINSTATES: "getSHINSTATES"
     })
   },
-   beforeMount() {
-     this.getDataFromCookies()
-  },
+  beforeMount() {
+    this.getDataFromCookies();
+    this.getSHINSTATES();
+  }
 };
 </script>
 

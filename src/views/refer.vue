@@ -70,6 +70,7 @@ export default {
   mounted() {
     let that = this;
     let qrCodeUrl = `https://shin-wallet.herokuapp.com/auth/signup?refer=${that.userUID}`;
+    console.log("qrCodeUrl ", qrCodeUrl);
     that.qrCodeUrl = qrCodeUrl;
   }
 };

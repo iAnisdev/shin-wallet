@@ -18,6 +18,7 @@ import phone from './views/phones.vue'
 import addPhone from './views/addphone.vue'
 import transfer from './views/transfer.vue'
 import refer from './views/refer.vue'
+import apps from './views/apps.vue'
 
 //auth
 import Auth from './views/Auth.vue'
@@ -45,7 +46,7 @@ const router = new Router({
       redirect: '/home',
       beforeEnter: requireAuth,
       //home childern routes
-      children:[
+      children: [
         {
           path: 'home',
           name: 'home',
@@ -78,27 +79,31 @@ const router = new Router({
       path: '/auth',
       component: Auth,
       //auth childern routes
-      children:[
+      children: [
         {
           path: '',
           name: 'login',
           component: login,
-          alias: '/login'
+          alias: '/login',
+          beforeEnter: isLoggedOut
         },
         {
           path: 'login',
           name: 'authlogin',
-          component: login
+          component: login,
+          beforeEnter: isLoggedOut
         },
         {
           path: 'signup',
           name: 'signup',
-          component: signup
+          component: signup,
+          beforeEnter: isLoggedOut
         },
         {
           path: 'recover',
           name: 'recover',
-          component: recover
+          component: recover,
+          beforeEnter: isLoggedOut
         }
       ]
     },
@@ -163,6 +168,12 @@ const router = new Router({
       component: refer,
       beforeEnter: requireAuth,
     },
+    {
+      path: '/apps',
+      name: 'apps',
+      component: apps,
+      beforeEnter: requireAuth,
+    },
     // redirect views
     {
       path: '*',
@@ -170,13 +181,27 @@ const router = new Router({
     },
   ]
 })
+
 function requireAuth(to, from, next) {
   if (!store.getters.getLoginStatus) {
     let userToken = Cookies.getCookies('x-auth-tok')
-    if(userToken){
+    if (userToken) {
       next()
-    }else{
+    } else {
       next("/auth")
+    }
+  } else {
+    next()
+  }
+}
+
+function isLoggedOut(to, from, next) {
+  if (!store.getters.getLoginStatus) {
+    let userToken = Cookies.getCookies('x-auth-tok')
+    if (!userToken) {
+      next()
+    } else {
+      next("/home")
     }
   } else {
     next()

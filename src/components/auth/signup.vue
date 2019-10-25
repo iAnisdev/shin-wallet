@@ -26,9 +26,26 @@
         <div style="margin-top: 2vh">
           <Input
             prefix="ios-lock"
-            type="password"
+            :type="inputType"
+            on-click="togglepassword"
             placeholder="请输入密码"
             v-model="password"
+            size="large"
+          >
+            <span slot="prepend">
+              <Icon type="ios-lock" />
+            </span>
+            <span slot="append" @click="togglepassword">
+              <Icon :type="eyeIcon" />
+            </span>
+          </Input>
+        </div>
+        <div style="margin-top: 2vh">
+          <Input
+            prefix="ios-lock"
+            type="password"
+            placeholder="确认新密码"
+            v-model="cpassword"
             size="large"
           />
         </div>
@@ -61,7 +78,11 @@ export default {
       smsCode: "",
       smsverify: "",
       password: "",
-      refer: ""
+      cpassword: "",
+      refer: "",
+      //show and hide password
+      inputType: "password",
+      eyeIcon: "md-eye"
     };
   },
   computed: {
@@ -120,6 +141,16 @@ export default {
           background: true,
           content: "无效密码"
         });
+      } else if (!that.isValid(that.cpassword)) {
+        this.$Message.error({
+          background: true,
+          content: "无效密码"
+        });
+      } else if (that.password !== that.cpassword) {
+        this.$Message.error({
+          background: true,
+          content: "密码不匹配"
+        });
       } else if (!that.isValid(that.refer)) {
         this.$Message.error({
           background: true,
@@ -161,6 +192,16 @@ export default {
       } else {
         return true;
       }
+    },
+    togglepassword() {
+      let that = this
+      if(that.inputType == "password"){
+        that.inputType = 'text'
+        that.eyeIcon = "md-eye-off"
+      }else{
+        that.inputType = 'password'
+        that.eyeIcon = "md-eye"
+      }
     }
   },
   mounted() {
@@ -187,14 +228,12 @@ export default {
 .loginPage {
   width: 100%;
   height: 100%;
-  /* background-image: url("~@/assets/bg.jpeg"); */
   background-size: cover;
 }
 .layer {
   width: 100%;
   height: 92%;
   background: rgba(255, 255, 255, 1);
-  /* opacity: 0.8; */
   padding: 12vh 1vw 2vh;
 }
 .singupTitle {

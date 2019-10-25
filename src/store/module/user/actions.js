@@ -21,7 +21,7 @@ export const getUserData = ({ commit, dispatch }, data) => {
 export const getDataFromCookies = ({ commit, dispatch }) => {
     try {
         let userToken = Cookies.getCookies('x-auth-tok')
-        if(userToken){
+        if (userToken) {
             let address = Cookies.getCookies('x-address')
             let saddress = Cookies.getCookies('x-saddress')
             let uid = Cookies.getCookies('x-uid')
@@ -30,7 +30,7 @@ export const getDataFromCookies = ({ commit, dispatch }) => {
             commit('SET_USER_ADDRESS', address)
             commit('SET_USER_SADDRESS', saddress)
             commit('SET_USER_UID', uid)
-            dispatch('getUserData' , {token: userToken})
+            dispatch('getUserData', { token: userToken })
         }
     } catch (e) {
         console.log(e)
@@ -94,7 +94,7 @@ export const getAccountBalanceUSDT = ({ commit, dispatch }, data) => {
     })
 }
 export const getSHINSTATES = ({ commit, dispatch }) => {
-    let symbolArr = ['USDT', 'ETH', 'BTC']
+    let symbolArr = ['BTC', 'ETH', 'USDT']
     let values = []
     symbolArr.forEach(function (symbol) {
         dispatch('calculateExchange', {

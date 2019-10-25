@@ -98,6 +98,7 @@
       </div> 
       <div class="cellLine"></div>
       -->
+      <router-link to="/apps">
       <div class="cellWithArrow">
         <div class="rowFS">
           <img src="@/assets/me/share.png" alt class="cellImg" />
@@ -107,6 +108,7 @@
           <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
         </div>
       </div>
+      </router-link>
       <div class="cellLine"></div>
       <div class="cell">
         <div class="rowFS">

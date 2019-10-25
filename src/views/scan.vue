@@ -37,7 +37,7 @@ export default {
 }
 .qrcodeScan{
   width: 300px;
-  height: 50vh;
+  height: 40vh;
   border: 2px solid black;
   margin: auto;
 }

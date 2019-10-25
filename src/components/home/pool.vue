@@ -4,23 +4,23 @@
       <div class="walletInfoCard">
         <div class="col">
           <h4 class="yesterday">昨日收益（SHIN）</h4>
-          <h3 class="yesterdayAmount">{{totalEarning }}</h3>
+          <h3 class="yesterdayAmount">{{totalEarning | noToFIxed('6')}}</h3>
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
           <div class="col">
             <h4 class="walletAsset">钱包资产（SHIN)</h4>
-            <h3 class="amount2">{{totalWalletAsset | noToFIxed('4')}}</h3>
-          </div>
-          <div class="lineHor"></div>
-          <div class="col">
-            <h4 class="walletAsset minepool">矿池资产（SHIN)</h4>
             <h3 class="amount2">{{checkingAddBalance | noToFIxed('4')}}</h3>
           </div>
           <div class="lineHor"></div>
           <div class="col">
-            <h4 class="walletAsset promotional">推广算力（SHIN)</h4>
+            <h4 class="walletAsset minepool">矿池资产（SHIN)</h4>
             <h3 class="amount2">{{savingAddBalance | noToFIxed('4')}}</h3>
+          </div>
+          <div class="lineHor"></div>
+          <div class="col">
+            <h4 class="walletAsset promotional">推广算力（SHIN)</h4>
+            <h3 class="amount2">{{promotionalRewards | noToFIxed('4')}}</h3>
           </div>
         </div>
       </div>
@@ -109,7 +109,7 @@ export default {
       showOutOfPoolModel: false,
       checkingAddBalance: 0,
       savingAddBalance: 0,
-      totalWalletAsset: 0,
+      promotionalRewards: 0,
       amountToPool: 0,
       amountoutOfPool: 0,
       totalEarning: 0,
@@ -283,9 +283,26 @@ export default {
   mounted() {
     let that = this;
     this.getUserWalletStates();
+    // let today = new Date();
+    // let yesterday = new Date(today);
+    // yesterday.setDate(today.getDate() - 1);
+    // var dd = yesterday.getDate();
+    // var mm = yesterday.getMonth() + 1; //January is 0!
+
+    // var yyyy = yesterday.getFullYear();
+    // if (dd < 10) {
+    //   dd = "0" + dd;
+    // }
+    // if (mm < 10) {
+    //   mm = "0" + mm;
+    // }
+    // yesterday = yyyy + "-" + mm + "-" + dd;
+    // console.log("yesterday", yesterday);
     let data = {
       address: that.userAddress,
       type: "stakereward"
+      // sdate: yesterday,
+      // edate: yesterday
     };
     that
       .transactionsList(data)
@@ -294,6 +311,8 @@ export default {
         return that.transactionsList({
           address: that.userAddress,
           type: "salesreward"
+          // sdate: yesterday,
+          // edate: yesterday
         });
       })
       .then(salesreward => {

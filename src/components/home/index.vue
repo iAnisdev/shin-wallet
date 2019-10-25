@@ -14,48 +14,55 @@
     </div>
     <div class="walletInfoCardBox">
       <div class="walletInfoCard">
-        <div class="col">
-          <h4 class="valueTitle">总资产折合（CNY)</h4>
-          <h3>{{accountBalanceCYN | noToFIxed('8')}}</h3>
+        <div class="rowSB pt-4">
+          <div class="col">
+            <h4 class="valueTitle">总资产折合（SHIN)</h4>
+            <h3>{{totalWalletAssets | noToFIxed('6')}}</h3>
+          </div>
+          <div class="lineHor"></div>
+          <div class="col">
+            <h4 class="valueTitle">总资产折合（CNY)</h4>
+            <h3>{{accountBalanceCYN | noToFIxed('6')}}</h3>
+          </div>
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
           <div class="col">
             <h4 class="valueTitle">昨日矿池收益（SHIN）</h4>
-            <h3>{{accountBalance | noToFIxed('6')}}</h3>
+            <h3>{{getYesterDayMineRewards | noToFIxed('6')}}</h3>
           </div>
           <div class="lineHor"></div>
           <div class="col">
             <h4 class="valueTitle">收益总折算（USDT）</h4>
-            <h3>{{accountBalanceUSDT | noToFIxed('6')}}</h3>
+            <h3>{{totalEarningUSDT | noToFIxed('6')}}</h3>
           </div>
         </div>
       </div>
     </div>
     <div class="midbarBox">
       <router-link to="/refer">
-      <div class="tabBox">
-        <img src="@/assets/icons/invite.png" class="tabIcon" />
-        <h4 class="tabText">邀请好友</h4>
-      </div>
+        <div class="tabBox">
+          <img src="@/assets/icons/invite.png" class="tabIcon" />
+          <h4 class="tabText">邀请好友</h4>
+        </div>
       </router-link>
       <router-link to="/buy">
-      <div class="tabBox">
-        <img src="@/assets/icons/addTokens.png" class="tabIcon" />
-        <h4 class="tabText">充值代币</h4>
-      </div>
+        <div class="tabBox">
+          <img src="@/assets/icons/addTokens.png" class="tabIcon" />
+          <h4 class="tabText">充值代币</h4>
+        </div>
       </router-link>
       <router-link to="/pool">
-      <div class="tabBox">
-        <img src="@/assets/icons/stats.png" class="tabIcon" />
-        <h4 class="tabText">矿池收益</h4>
-      </div>
+        <div class="tabBox">
+          <img src="@/assets/icons/stats.png" class="tabIcon" />
+          <h4 class="tabText">矿池收益</h4>
+        </div>
       </router-link>
       <router-link to="/transfer">
-      <div class="tabBox">
-        <img src="@/assets/icons/transactions.png" class="tabIcon" />
-        <h4 class="tabText">充提记录</h4>
-      </div>
+        <div class="tabBox">
+          <img src="@/assets/icons/transactions.png" class="tabIcon" />
+          <h4 class="tabText">充提记录</h4>
+        </div>
       </router-link>
     </div>
     <div class="margeuTag">
@@ -93,10 +100,19 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { _ } from "vue-underscore";
 
 export default {
   data() {
-    return {};
+    return {
+      walletaddressSAsset: 0,
+      walletaddressAsset: 0,
+      totalWalletAssets: 0,
+      getYesterDayMineRewards: 0,
+      totalEarningUSDT: 0,
+      stakingRewards: [],
+      promotionsRewards: []
+    };
   },
   computed: {
     ...mapGetters({
@@ -105,9 +121,7 @@ export default {
       userAddress: "getUserAddress",
       userSAddress: "getUserSAddress",
       userUID: "getUserUID",
-      accountBalance: "getAccountBalanceSHIN",
       accountBalanceCYN: "getAccountBalanceCYN",
-      accountBalanceUSDT: "getAccountBalanceUSDT",
       exchangeRate: "getExchangeValues",
       userData: "userData"
     })
@@ -115,13 +129,17 @@ export default {
   methods: {
     ...mapActions({
       getAccountBalance: "getAccountBalance",
+      getWalletBalanceByAddress: "getWalletBalanceByAddress",
       getDataFromCookies: "getDataFromCookies",
-      toggelLoader: "toggelLoader"
+      toggelLoader: "toggelLoader",
+      getUserData: "getUserData",
+      calculateExchange: "calculateExchange",
+      getAccountBalanceCNY: "getAccountBalanceCNY",
+      transactionsList: "transactionsList"
     }),
     scanPage() {
       this.$router.push("/scan");
     },
-
     copyTestingCode() {
       let that = this;
       let testingCodeToCopy = document.querySelector("#walletAddr");
@@ -130,7 +148,7 @@ export default {
       try {
         var successful = document.execCommand("copy");
         var msg = successful ? "successful" : "unsuccessful";
-         this.$Message.success({
+        this.$Message.success({
           background: true,
           content: "复制钱包地址"
         });
@@ -140,24 +158,117 @@ export default {
       /* unselect the range */
       testingCodeToCopy.setAttribute("type", "hidden");
       window.getSelection().removeAllRanges();
+    },
+    getWalletInfo() {
+      let that = this;
+      let data = {
+        address: that.userAddress
+      };
+      that
+        .getWalletBalanceByAddress(data)
+        .then(res => {
+          that.walletaddressAsset = res;
+          let sdata = {
+            address: that.userSAddress
+          };
+          return that.getWalletBalanceByAddress(sdata);
+        })
+        .then(sres => {
+          that.walletaddressSAsset = sres;
+          let totalAssets =
+            Number(that.walletaddressAsset) + Number(that.walletaddressSAsset);
+          that.totalWalletAssets = totalAssets;
+          that.getYesterDayMineIncom();
+          return that.getAccountBalanceCNY(totalAssets);
+        })
+        .catch(err => {
+          that.toggelLoader();
+        });
+    },
+    getYesterDayMineIncom() {
+      let that = this;
+      let data = {
+        address: that.userAddress,
+        type: "stakereward"
+      };
+      that
+        .transactionsList(data)
+        .then(res => {
+          if (res.result.length > 0) {
+            let transactions = res.result;
+            let amountList = [];
+            _.each(transactions, function(trans) {
+              amountList.push(trans.amount);
+            });
+            let totalEarning = _.reduce(
+              amountList,
+              function(memo, num) {
+                return Number(memo) + Number(num);
+              },
+              0
+            );
+            that.getYesterDayMineRewards = totalEarning;
+          } else {
+            that.getYesterDayMineRewards = 0;
+          }
+          that.getTotalEarning()
+        })
+        .catch(err => {
+          that.toggelLoader();
+        });
+    },
+    getTotalEarning() {
+      let that = this;
+      let data = {
+        address: that.userAddress,
+        type: "staking"
+      };
+      that
+        .transactionsList(data)
+        .then(res => {
+          console.log('res' , res)
+          that.stakingRewards = res.result;
+          let promotionData = {
+            address: that.userAddress,
+            type: "promotion"
+          };
+          return that.transactionsList(promotionData);
+        })
+        .then(pres => {
+          console.log('pres' , pres)
+          that.promotionsRewards = pres.result;
+          let amountList = [];
+          _.each(that.stakingRewards, function(trans) {
+            amountList.push(trans.amount);
+          });
+          _.each(that.promotionsRewards, function(trans) {
+            amountList.push(trans.amount);
+          });
+          console.log('amountList ' , amountList)
+          let totalEarning = _.reduce(
+            amountList,
+            function(memo, num) {
+              return Number(memo) + Number(num);
+            },
+            0
+          );
+          that.totalEarningUSDT = totalEarning
+          that.toggelLoader();
+        })
+        .catch(err => {
+          that.toggelLoader();
+        });
     }
   },
   watch: {},
   mounted() {
     let that = this;
     if (this.isLoggedIn) {
-      let data = {
-        address: that.userAddress
-      };
-      that.toggelLoader();
-      that
-        .getAccountBalance(data)
-        .then(res => {
-          that.toggelLoader();
-        })
-        .catch(err => {
-          that.toggelLoader();
-        });
+      that.toggelLoader()
+      that.getUserData({
+        token: that.userToken
+      });
+      that.getWalletInfo();
     } else {
       this.$router.push("auth");
     }
@@ -176,6 +287,7 @@ export default {
   background: rgba(247, 247, 247, 1);
   overflow-y: scroll;
 }
+
 .profileInfo {
   display: flex;
   flex-direction: column;
@@ -184,6 +296,7 @@ export default {
   padding: 2vh 10%;
   opacity: 1;
 }
+
 .name {
   font-size: 20px;
   font-family: PingFang SC;
@@ -192,6 +305,7 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 1;
 }
+
 .walletAddr {
   font-size: 14px;
   font-family: PingFang SC;
@@ -200,6 +314,7 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 0.8;
 }
+
 .refNumber {
   font-size: 12px;
   font-family: PingFang SC;
@@ -208,21 +323,25 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 0.4;
 }
+
 .rowSB {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
+
 .rowFS {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
 }
+
 .walletInfoCardBox {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
+
 .walletInfoCard {
   background: rgba(58, 51, 140, 1);
   box-shadow: 0px 3px 6px rgba(5, 2, 39, 0.12);
@@ -232,6 +351,7 @@ export default {
   width: 88%;
   padding: 3% 8%;
 }
+
 .lineBtm {
   width: 100%;
   height: 2px;
@@ -239,6 +359,7 @@ export default {
   opacity: 0.04;
   margin-top: 2vh;
 }
+
 .valueTitle {
   font-size: 12px;
   font-family: PingFang SC;
@@ -247,15 +368,18 @@ export default {
   color: rgba(255, 255, 255, 1);
   opacity: 0.6;
 }
+
 .lineHor {
   width: 2px;
   height: 52px;
   background: rgba(255, 255, 255, 1);
   opacity: 0.04;
 }
+
 .pt-4 {
   padding-top: 4%;
 }
+
 .midbarBox {
   width: 100%;
   background: rgba(255, 255, 255, 1);
@@ -266,13 +390,16 @@ export default {
   padding: 3% 2%;
   margin-top: 2vh;
 }
+
 .tabBox {
   text-align: center;
 }
+
 .tabIcon {
   width: 32px;
   height: 32px;
 }
+
 .tabText {
   font-size: 12px;
   font-family: PingFang SC;
@@ -281,12 +408,14 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 0.6;
 }
+
 .margeuTag {
   padding: 2px 10% 2px;
   background: rgba(58, 51, 140, 1);
   opacity: 1;
   align-items: center;
 }
+
 .moreText {
   font-size: 11px;
   font-family: PingFang SC;
@@ -295,6 +424,7 @@ export default {
   color: rgba(255, 255, 255, 1);
   opacity: 0.8;
 }
+
 .notifications {
   font-size: 11px;
   font-family: PingFang SC;
@@ -303,9 +433,11 @@ export default {
   opacity: 1;
   width: 60vw;
 }
+
 .echangeRateBox {
   padding: 2% 5%;
 }
+
 .poolTitle {
   font-size: 16px;
   font-family: PingFang SC;
@@ -314,12 +446,14 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 1;
 }
+
 .poolLine {
   height: 22px;
   border: 1px solid rgba(0, 0, 0, 1);
   opacity: 0.08;
   margin: auto 2vw;
 }
+
 .poolInfo {
   font-size: 12px;
   font-family: PingFang SC;
@@ -328,12 +462,14 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 0.64;
 }
+
 .rateList {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   padding: 2% 2%;
 }
+
 .rateBar {
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
@@ -343,6 +479,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 }
+
 .rateName {
   font-size: 14px;
   font-family: PingFang SC;
@@ -351,6 +488,7 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 0.8;
 }
+
 .rateActive {
   font-size: 16px;
   font-family: PingFang SC;
@@ -358,6 +496,7 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 1.2;
 }
+
 .percentageBox {
   background: rgba(255, 0, 101, 1);
   opacity: 1;
@@ -369,9 +508,11 @@ export default {
   justify-content: center;
   text-align: center;
 }
+
 .rateBarpd {
   padding: 4% 5%;
 }
+
 .lastRate {
   font-size: 11px;
   font-family: PingFang SC;
@@ -380,6 +521,7 @@ export default {
   color: rgba(0, 0, 0, 1);
   opacity: 0.72;
 }
+
 .activeRate {
   font-size: 16px;
   font-family: PingFang SC;
