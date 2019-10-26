@@ -206,18 +206,18 @@ export default {
         .then(res => {
           if (res.result.length > 0) {
             let transactions = res.result;
-            let amountList = [];
-            _.each(transactions, function(trans) {
-              amountList.push(trans.amount);
-            });
-            let totalEarning = _.reduce(
-              amountList,
-              function(memo, num) {
-                return Number(memo) + Number(num);
-              },
-              0
-            );
-            that.getYesterDayMineRewards = totalEarning;
+            // let amountList = [];
+            // _.each(transactions, function(trans) {
+            //   amountList.push(trans.amount);
+            // });
+            // let totalEarning = _.reduce(
+            //   amountList,
+            //   function(memo, num) {
+            //     return Number(memo) + Number(num);
+            //   },
+            //   0
+            // );
+            that.getYesterDayMineRewards = transactions[0].amount;
           } else {
             that.getYesterDayMineRewards = 0;
           }
@@ -246,7 +246,6 @@ export default {
           return that.transactionsList(promotionData);
         })
         .then(pres => {
-          console.log("pres", pres);
           that.promotionsRewards = pres.result;
           let amountList = [];
           _.each(that.stakingRewards, function(trans) {
@@ -263,8 +262,17 @@ export default {
             },
             0
           );
-          that.totalEarningUSDT = totalEarning;
+          let calData = {
+            amount: totalEarning,
+            from: 'SHIN',
+            to: 'USDT'
+          }
+          that.calculateExchange(calData).then((res) =>{
+          that.totalEarningUSDT = res;
           that.toggelLoader();
+          }).catch((err) => {
+          that.toggelLoader();
+          })
         })
         .catch(err => {
           that.toggelLoader();

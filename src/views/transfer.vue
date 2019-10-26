@@ -14,10 +14,10 @@
     </div>
     <div class="widthdrawTable">
       <div style="margin-top: 1vh">
-        <Input prefix="md-card" v-model="walletAddr" placeholder="输入钱包地址" size="large" />
+        <Input prefix="ios-bookmarks" v-model="walletAddr" placeholder="输入钱包地址" size="large" />
       </div>
       <div style="margin-top: 1vh">
-        <Input prefix="logo-usd" v-model="amount" placeholder="输入金额" size="large" />
+        <Input prefix="ios-cash" v-model="amount" placeholder="输入金额" size="large" />
       </div>
       <Button size="large" long class="button" @click="transferAmount">划转</Button>
     </div>

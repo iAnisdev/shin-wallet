@@ -8,15 +8,18 @@ export const getUserData = ({ commit, dispatch }, data) => {
         API().post('/sh/userdata.php', data).then((res) => {
             if (res.data.status == 0) {
                 let userData = res.data.result
-                let userToken = userData.token
+                let userToken = userData.tok
                 let uid = userData.uid
-                // let address = userData.address
-                // let saddress = userData.saddress
-                // Cookies.setCookie('x-auth-tok', userToken, 20)
-                // Cookies.setCookie('x-uid', uid, 20)
-                // Cookies.setCookie('x-address', address, 20)
-                // Cookies.setCookie('x-saddress', saddress, 20)
-                console.log('userData ' , userData)
+                let address = userData.addresses.find(function (address) {
+                    return address.atype == 'checking';
+                }).address;
+                let saddress = userData.addresses.find(function (address) {
+                    return address.atype == 'saving';
+                }).address;
+                Cookies.setCookie('x-auth-tok', userToken, 20)
+                Cookies.setCookie('x-uid', uid, 20)
+                Cookies.setCookie('x-address', address, 20)
+                Cookies.setCookie('x-saddress', saddress, 20)
                 commit('SET_USER_DATA', userData)
                 resolve(userData)
             } else {
@@ -103,7 +106,7 @@ export const getAccountBalanceUSDT = ({ commit, dispatch }, data) => {
     })
 }
 export const getSHINSTATES = ({ commit, dispatch }) => {
-    let symbolArr = ['BTC', 'ETH', 'XRP' , 'EOS']
+    let symbolArr = ['BTC', 'ETH', 'XRP', 'EOS']
     let values = []
     symbolArr.forEach(function (symbol) {
         dispatch('calculateExchange', {
