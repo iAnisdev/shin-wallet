@@ -20,7 +20,7 @@
           <div class="lineHor"></div>
           <div class="col">
             <h4 class="walletAsset promotional">推广算力（SHIN)</h4>
-            <h3 class="amount2">{{promotionalRewards | noToFIxed('4')}}</h3>
+            <h3 class="amount2">{{userData.promopwr | noToFIxed('4')}}</h3>
           </div>
         </div>
       </div>

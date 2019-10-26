@@ -75,22 +75,32 @@
       </div>
     </div>
     <div class="echangeRateBox">
-      <div class="rowFS">
-        <h2 class="poolTitle">行情</h2>
+      <div class="rowSB">
+        <div class="textL">
+          <h6 class="tableText">名称</h6>
+        </div>
+        <div class="textC">
+          <h6 class="tableText">市场价格</h6>
+        </div>
+        <div class="textR">
+          <h6 class="tableText">涨跌率</h6>
+        </div>
       </div>
+
+      <div class="chartLine"></div>
       <div class="rateList" v-for="(rate , index) in exchangeRate" :key="index">
         <div class="rateBar">
           <div class="rowFS rateBarpd">
             <div class="col">
               <h3 class="rateName">
-                <b class="rateActive">{{rate.name}}</b>/SHIN
+                <b class="rateActive">{{rate.name}}</b>
               </h3>
               <!-- <h3 class="lastRate">综合 123456.78</h3> -->
             </div>
           </div>
           <h4 class="activeRate">{{rate.rate | noToFIxed(8)}}</h4>
           <div class="percentageBox">
-            <h4>+ {{rate.percentage}} %</h4>
+            <h4 class="percentageBTn">+ {{rate.percentage}} %</h4>
           </div>
         </div>
       </div>
@@ -221,7 +231,7 @@ export default {
       let that = this;
       let data = {
         address: that.userAddress,
-        type: "staking"
+        type: "stakereward"
       };
       that
         .transactionsList(data)
@@ -432,11 +442,12 @@ export default {
   font-weight: 500;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
-  width: 60vw;
+  margin: auto;
 }
 
 .echangeRateBox {
-  padding: 2% 5%;
+  padding: 3% 4%;
+  background-color: #fff;
 }
 
 .poolTitle {
@@ -467,18 +478,19 @@ export default {
 .rateList {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  padding: 2% 2%;
+  justify-content: space-evenly;
+  margin-top: 4px;
 }
 
 .rateBar {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
-  border-radius: 16px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+.rateBar:last-child {
+  border-bottom: none;
 }
 
 .rateName {
@@ -499,19 +511,21 @@ export default {
 }
 
 .percentageBox {
-  background: rgba(255, 0, 101, 1);
-  opacity: 1;
-  border-radius: 0px 16px 16px 0px;
-  padding: 4% 5%;
-  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
 }
+.percentageBTn {
+  background: rgba(255, 0, 101, 1);
+  opacity: 1;
+  color: #fff;
+  padding: 5px;
+  border-radius: 4px;
+}
 
 .rateBarpd {
-  padding: 4% 5%;
+  padding: 4% 1%;
 }
 
 .lastRate {
@@ -530,5 +544,22 @@ export default {
   align-self: center;
   color: rgba(0, 0, 0, 1);
   opacity: 1;
+}
+.tableText {
+  font-size: 12px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 0.4;
+}
+.chartLine {
+  width: 100%;
+  height: 1px;
+  background: rgba(0, 0, 0, 1);
+  opacity: 0.08;
+}
+.textC {
+  text-align: center;
 }
 </style>

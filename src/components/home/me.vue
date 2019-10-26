@@ -4,9 +4,9 @@
       <div class="userInfoCard">
         <div class="rowSB">
           <h3 class="name">{{userData.username}}</h3>
-          <router-link to="/qrcode">
+          <!-- <router-link to="/qrcode">
             <v-icon name="qrcode" scale="1.2"></v-icon>
-          </router-link>
+          </router-link> -->
         </div>
         <div class="rowFS">
           <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')}}</h5>
@@ -208,8 +208,8 @@ export default {
   justify-content: center;
 }
 .userInfoCard {
-  width: 96%;
-  padding: 4% 5%;
+  width: 86%;
+  padding: 5% 5%;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
