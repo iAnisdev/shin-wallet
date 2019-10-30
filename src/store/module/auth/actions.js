@@ -23,7 +23,7 @@ export const userLogin = ({ commit, dispatch }, data) => new Promise((resolve, r
             let uid = res.data.result.uid
             let address = res.data.result.address
             let saddress = res.data.result.saddress
-            Cookies.setCookie('x-auth-tok', userToken, 20)
+            Cookies.setCookie('x-auth-tok', `0x${userToken}`, 20)
             Cookies.setCookie('x-uid', uid, 20)
             Cookies.setCookie('x-address', address, 20)
             Cookies.setCookie('x-saddress', saddress, 20)
@@ -53,7 +53,7 @@ export const userRegister = ({ commit, dispatch }, data) => new Promise((resolve
             let saddress = res.data.result.saddress
             Cookies.setCookie('x-auth-tok', userToken, 20)
             Cookies.setCookie('x-uid', uid, 20)
-            Cookies.setCookie('x-address', address, 20)
+            Cookies.setCookie('x-address', `0x${userToken}`, 20)
             Cookies.setCookie('x-saddress', saddress, 20)
             commit('SET_LOGIN_STATUS', true)
             commit('SET_USER_TOKEN', userToken)
