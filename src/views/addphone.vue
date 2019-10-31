@@ -106,6 +106,10 @@ export default {
           that.toggelLoader()
         }).catch((err) => {
           that.toggelLoader()
+          this.$Message.error({
+          background: true,
+          content: err.message
+        });
             console.log('err ' , err)
         })
       }

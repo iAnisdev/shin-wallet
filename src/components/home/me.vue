@@ -9,8 +9,8 @@
           </router-link> -->
         </div>
         <div class="rowFS">
-          <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')}}</h5>
-          <input type="hidden" id="walletAddr" :value="userAddress" />
+          <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')  | oxFliter}}</h5>
+          <input type="hidden" id="walletAddr" :value="userAddress  | oxFliter" />
           <Icon type="md-copy" size="20" @click="copyTestingCode" />
         </div>
       </div>
@@ -186,6 +186,7 @@ export default {
       token: that.userToken
     };
     this.getUserData(data);
+    that.toggelLoader(false)
   }
 };
 </script>

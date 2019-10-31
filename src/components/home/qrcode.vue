@@ -2,8 +2,8 @@
   <section class="qrcodePage">
     <div class="qrcodeCard">
       <div class="walletBox">
-        <h4 class="walletAddress">钱包账号：{{userAddress | addressShortner('15')}}</h4>
-        <input type="hidden" id="walletAddr" :value="userAddress" />
+        <h4 class="walletAddress">钱包账号：{{userAddress | addressShortner('12')   | oxFliter}}</h4>
+        <input type="hidden" id="walletAddr" :value="userAddress   | oxFliter " />
         <Icon type="md-copy" size="20" @click="copyTestingCode"/>
       </div>
       <div class="qrBox">
@@ -35,7 +35,6 @@ export default {
   })
   },
   methods:{
-
     copyTestingCode() {
       let that = this;
       let testingCodeToCopy = document.querySelector("#walletAddr");

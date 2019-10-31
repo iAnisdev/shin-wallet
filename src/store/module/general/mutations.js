@@ -1,8 +1,12 @@
 module.exports = {
-    SET_LOADER_STATUS: (state , status) =>{
-        state.showLoader = !state.showLoader
+    SET_LOADER_STATUS: (state, status) => {
+        if (status !== undefined) {
+            state.showLoader = status
+        } else {
+            state.showLoader = !state.showLoader
+        }
     },
-    SET_CURRENT_TRANSACTION: (state , tran) =>{
+    SET_CURRENT_TRANSACTION: (state, tran) => {
         state.currentTran = tran
     },
 }

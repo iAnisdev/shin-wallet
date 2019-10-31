@@ -5,7 +5,7 @@ import router from '@/router'
 import { reject, Promise } from 'q'
 
 export const toggelLoader = ({ commit, dispatch }, data) => {
-    commit('SET_LOADER_STATUS')
+    commit('SET_LOADER_STATUS' , data)
 }
 export const setCurrentTransaction = ({ commit, dispatch }, data) => {
     commit('SET_CURRENT_TRANSACTION', data)

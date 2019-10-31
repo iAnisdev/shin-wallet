@@ -21,17 +21,18 @@
       </div>
       <Button size="large" long class="button" @click="transferAmount">划转</Button>
     </div>
-     <Modal
-        v-model="trasactionDone"
-        title="交易成功"
-        ok-text="关闭"
-        cancel-text=" "
-        @on-ok="hidePopup"
-        @on-cancel="hidePopup">
-        <CellGroup>
-                <Cell title="到" :label="walletAddr" />
-                <Cell title="代币数量" :extra="amount" />
-            </CellGroup>
+    <Modal
+      v-model="trasactionDone"
+      title="交易成功"
+      ok-text="关闭"
+      cancel-text=" "
+      @on-ok="hidePopup"
+      @on-cancel="hidePopup"
+    >
+      <CellGroup>
+        <Cell title="到" :label="walletAddr" />
+        <Cell title="代币数量" :extra="amount" />
+      </CellGroup>
     </Modal>
   </section>
 </template>
@@ -70,27 +71,31 @@ export default {
     transferAmount() {
       let that = this;
       if (!that.isValid(that.walletAddr)) {
+        console.log("walletAddr");
         this.$Message.error({
           background: true,
           content: "输入钱包地址"
         });
       } else if (!that.isValid(that.amount)) {
+        console.log("amount");
         this.$Message.error({
           background: true,
           content: "无效金额"
         });
-      } else if (that.amount > that.accountBalance) {
+      } else if (that.amount > Number(that.accountBalance)) {
         this.$Message.error({
           background: true,
           content: "无效金额"
         });
       } else {
+        let walletAddr = that.walletAddr.substr(2);
         let data = {
           token: that.userToken,
           from: that.userAddress,
-          to: that.walletAddr,
+          to: walletAddr,
           amount: that.amount
         };
+        console.log("transferAmountToWallet ", data);
         that.toggelLoader();
         that
           .transferAmountToWallet(data)
@@ -99,7 +104,7 @@ export default {
               background: true,
               content: "交易成功"
             });
-            that.trasactionDone = true
+            that.trasactionDone = true;
             that.toggelLoader();
           })
           .catch(err => {
@@ -124,8 +129,8 @@ export default {
         return true;
       }
     },
-    hidePopup(){
-      this.$router.push('/home');
+    hidePopup() {
+      this.$router.push("/home");
     }
   },
   mounted() {

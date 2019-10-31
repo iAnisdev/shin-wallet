@@ -157,7 +157,7 @@ export default {
           let totalWalletAsset =
             Number(that.checkingAddBalance) + Number(that.savingAddBalance);
           that.totalWalletAsset = String(totalWalletAsset);
-          that.toggelLoader();
+    that.toggelLoader(false)
         })
         .catch(err => {
           console.log("getWalletBalanceByAddress ", err);

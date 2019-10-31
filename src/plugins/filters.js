@@ -21,3 +21,9 @@ Vue.filter('capitalize', function (value, range) {
   value = value.toString()
   return value.charAt(0).toUpperCase() + value.slice(1)
 })
+
+Vue.filter('oxFliter', function (value) {
+  if (!value) return ''
+  return `0x${value}`
+})
+

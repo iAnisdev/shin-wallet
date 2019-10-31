@@ -6,8 +6,8 @@
         <img src="@/assets/scan.png" class="tabIcon" @click="scanPage" />
       </div>
       <div class="rowFS">
-        <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')}}</h5>
-        <input type="hidden" id="walletAddr" :value="userAddress" />
+        <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16') | oxFliter}}</h5>
+        <input type="hidden" id="walletAddr" :value="userAddress | oxFliter" />
         <Icon type="md-copy" size="20" @click="copyTestingCode" />
       </div>
       <h5 class="refNumber">邀请码：{{userData.uid}}</h5>
@@ -19,11 +19,6 @@
             <h4 class="valueTitle">总资产折合（SHIN)</h4>
             <h3>{{totalWalletAssets | noToFIxed('6')}}</h3>
           </div>
-          <!-- <div class="lineHor"></div>
-          <div class="col">
-            <h4 class="valueTitle">总资产折合（CNY)</h4>
-            <h3>{{accountBalanceCYN | noToFIxed('6')}}</h3>
-          </div>-->
         </div>
         <div class="lineBtm"></div>
         <div class="rowSB pt-4">
@@ -80,13 +75,12 @@
           <h6 class="tableText">名称</h6>
         </div>
         <div class="textC">
-          <h6 class="tableText">市场价格</h6>
+          <h6 class="tableText">折合(SHIN)</h6>
         </div>
         <div class="textR">
           <h6 class="tableText">涨跌率</h6>
         </div>
       </div>
-
       <div class="chartLine"></div>
       <div class="rateList" v-for="(rate , index) in exchangeRate" :key="index">
         <div class="rateBar">
@@ -95,10 +89,10 @@
               <h3 class="rateName">
                 <b class="rateActive">{{rate.name}}</b>
               </h3>
-              <!-- <h3 class="lastRate">综合 123456.78</h3> -->
+              <h3 class="lastRate textC">USDT {{rate.usdt | noToFIxed(8)}}</h3>
             </div>
           </div>
-          <h4 class="activeRate">{{rate.rate | noToFIxed(8)}}</h4>
+          <h4 class="activeRate">{{rate.shin | noToFIxed(8)}}</h4>
           <div class="percentageBox">
             <h4 class="percentageBTn">+ {{rate.percentage}} %</h4>
           </div>
@@ -188,6 +182,7 @@ export default {
           let totalAssets =
             Number(that.walletaddressAsset) + Number(that.walletaddressSAsset);
           that.totalWalletAssets = totalAssets;
+          that.toggelLoader(false);
           that.getYesterDayMineIncom();
           return that.getAccountBalanceCNY(totalAssets);
         })
@@ -206,22 +201,12 @@ export default {
         .then(res => {
           if (res.result.length > 0) {
             let transactions = res.result;
-            // let amountList = [];
-            // _.each(transactions, function(trans) {
-            //   amountList.push(trans.amount);
-            // });
-            // let totalEarning = _.reduce(
-            //   amountList,
-            //   function(memo, num) {
-            //     return Number(memo) + Number(num);
-            //   },
-            //   0
-            // );
             that.getYesterDayMineRewards = transactions[0].amount;
           } else {
             that.getYesterDayMineRewards = 0;
           }
           that.getTotalEarning();
+          that.toggelLoader(false);
         })
         .catch(err => {
           that.toggelLoader();
@@ -236,13 +221,11 @@ export default {
       that
         .transactionsList(data)
         .then(res => {
-          // console.log('res' , res)
           that.stakingRewards = res.result;
           let promotionData = {
             address: that.userAddress,
             type: "promotion"
           };
-          // console.log(that.userAddress , '4677d25f5753b461d96365ea4d964813f5c5c597' )
           return that.transactionsList(promotionData);
         })
         .then(pres => {
@@ -254,7 +237,6 @@ export default {
           _.each(that.promotionsRewards, function(trans) {
             amountList.push(trans.amount);
           });
-          // console.log('amountList ' , amountList)
           let totalEarning = _.reduce(
             amountList,
             function(memo, num) {
@@ -264,15 +246,15 @@ export default {
           );
           let calData = {
             amount: totalEarning,
-            from: 'SHIN',
-            to: 'USDT'
-          }
-          that.calculateExchange(calData).then((res) =>{
-          that.totalEarningUSDT = res;
-          that.toggelLoader();
-          }).catch((err) => {
-          that.toggelLoader();
-          })
+            from: "SHIN",
+            to: "USDT"
+          };
+          that.calculateExchange(calData).then(res => {
+            that.totalEarningUSDT = res;
+          });
+          that.toggelLoader(false).catch(err => {
+            that.toggelLoader();
+          });
         })
         .catch(err => {
           that.toggelLoader();
@@ -362,7 +344,7 @@ export default {
 }
 
 .walletInfoCard {
-  background: rgba(58, 51, 140, 1);
+  background: #3a59be;
   box-shadow: 0px 3px 6px rgba(5, 2, 39, 0.12);
   opacity: 1;
   border-radius: 16px;
@@ -430,7 +412,7 @@ export default {
 
 .margeuTag {
   padding: 2px 10% 2px;
-  background: rgba(58, 51, 140, 1);
+  background: #3a59be;
   opacity: 1;
   align-items: center;
 }
@@ -514,6 +496,7 @@ export default {
   font-size: 16px;
   font-family: PingFang SC;
   font-weight: bolder;
+  align-self: flex-start;
   color: rgba(0, 0, 0, 1);
   opacity: 1.2;
 }
@@ -533,7 +516,7 @@ export default {
 }
 
 .rateBarpd {
-  padding: 4% 1%;
+  padding: 2% 1%;
 }
 
 .lastRate {
@@ -546,7 +529,7 @@ export default {
 }
 
 .activeRate {
-  font-size: 16px;
+  font-size: 14px;
   font-family: PingFang SC;
   font-weight: 600;
   align-self: center;
@@ -568,6 +551,6 @@ export default {
   opacity: 0.08;
 }
 .textC {
-  text-align: center;
+  text-align: right;
 }
 </style>
