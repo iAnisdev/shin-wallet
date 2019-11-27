@@ -9,4 +9,7 @@ module.exports = {
     SET_CURRENT_TRANSACTION: (state, tran) => {
         state.currentTran = tran
     },
+    SET_OTHER_USERNAMES: (state, list) => {
+        state.otherUsernames = list
+    }
 }

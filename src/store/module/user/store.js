@@ -11,7 +11,10 @@ const state = {
     balanceOf: 0,
     balanceOFUSDT: 0,
     balanceOfCYN: 0,
-    generalExchangeValues: []
+    generalExchangeValues: [],
+    userAddress: '',
+    userErcAddress: '',
+    userPhone: ''
 }
 
 export default {

@@ -1,8 +1,11 @@
 module.exports = {
-    showLoaderStatus: (state)=>{
+    showLoaderStatus: (state) => {
         return state.showLoader
     },
-    getCurrentTrans: (state)=>{
+    getCurrentTrans: (state) => {
         return state.currentTran
     },
+    getUsernameList: (state) => {
+        return state.otherUsernames
+    }
 }

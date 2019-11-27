@@ -2,9 +2,20 @@
   <section class="loginPage">
     <navbar showBack="'true'" title="更新密码" />
     <div class="layer">
+      <div v-if="showL">
+        <img src="@/assets/logo.png" class="logo" srcset />
+      </div>
       <div class="form">
         <div style="margin-top: 2vh">
-          <Input prefix="ios-lock" type="password" placeholder="输入旧密码" v-model="old" size="large" />
+          <Input
+            prefix="ios-lock"
+            type="password"
+            placeholder="输入旧密码"
+            v-model="old"
+            size="large"
+            @on-focus="hideLogo"
+            @on-blur="showLogo"
+          />
         </div>
         <div style="margin-top: 2vh">
           <Input
@@ -13,6 +24,8 @@
             placeholder="输入新密码"
             v-model="newPassword"
             size="large"
+            @on-focus="hideLogo"
+            @on-blur="showLogo"
           />
         </div>
         <div style="margin-top: 2vh">
@@ -22,6 +35,8 @@
             placeholder="确认新密码"
             v-model="cpassword"
             size="large"
+            @on-focus="hideLogo"
+            @on-blur="showLogo"
           />
         </div>
         <Button long size="large" type="success" class="recoverBtn" @click="updatePassword">更新密码</Button>
@@ -39,6 +54,7 @@ export default {
   },
   data() {
     return {
+      showL: true,
       old: "",
       newPassword: "",
       cpassword: ""
@@ -55,6 +71,16 @@ export default {
       changePassword: "changePassword",
       toggelLoader: "toggelLoader"
     }),
+    showLogo() {
+      console.log("called");
+      let that = this;
+      that.showL = true;
+    },
+    hideLogo() {
+      console.log("called");
+      let that = this;
+      that.showL = false;
+    },
     updatePassword() {
       let that = this;
       if (!that.isValid(that.old)) {

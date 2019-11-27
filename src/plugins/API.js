@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export default ()=>{
+export default () => {
     return axios.create({
-        baseURL: 'https://test.freshchefs.cn'
+        baseURL: 'https://test2.freshchefs.cn'
     })
 }

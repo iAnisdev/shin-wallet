@@ -10,7 +10,13 @@
       >
         <div class="rowSB">
           <p>+{{phone.country}}{{phone.phone}}</p>
-          <Icon type="ios-trash" size="24" color="red" @click="deletePhone(phone)" />
+          <Icon
+            type="ios-trash"
+            size="24"
+            color="red"
+            @click="deletePhone(phone)"
+            v-if="userData.phones.length > 1"
+          />
         </div>
       </Card>
       <Card :bordered="false" style="margin-top: 1vh" to="/phone/add">
@@ -58,7 +64,7 @@ export default {
             background: true,
             content: "删除电话号码"
           });
-          this.getUserData({token: that.userToken});
+          this.getUserData({ token: that.userToken });
         })
         .catch(err => {
           that.toggelLoader();

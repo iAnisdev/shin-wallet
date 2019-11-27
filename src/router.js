@@ -5,20 +5,25 @@ import store from './store/store'
 // ---------------------------- views
 
 //Pages
-import Landing from './views/Landing'
 import Home from './views/Home.vue'
 import buy from './views/buy.vue'
 import withdraw from './views/withdraw.vue'
-import addWallet from './views/addWallet.vue'
+import profile from './views/profile.vue'
 import transaction from './views/transaction.vue'
 import record from './views/record.vue'
 import scan from './views/scan.vue'
-import changePassword from './views/changePassword.vue'
 import phone from './views/phones.vue'
 import addPhone from './views/addphone.vue'
 import transfer from './views/transfer.vue'
 import refer from './views/refer.vue'
 import apps from './views/apps.vue'
+// Password Update UI
+import changePassword from './views/change/password.vue'
+import changeTPassword from './views/change/tpassword.vue'
+// Additional accounts
+import accountList from './views/account/list.vue'
+import addAccount from './views/account/Addnew.vue'
+
 
 //auth
 import Auth from './views/Auth.vue'
@@ -120,10 +125,10 @@ const router = new Router({
       component: withdraw,
     },
     {
-      path: '/addWallet',
-      name: 'addWallet',
+      path: '/profile',
+      name: 'profile',
       beforeEnter: requireAuth,
-      component: addWallet,
+      component: profile,
     },
     {
       path: '/transaction',
@@ -143,9 +148,14 @@ const router = new Router({
       component: scan,
     },
     {
-      path: '/changePassword',
+      path: '/change/password',
       name: 'changePassword',
       component: changePassword,
+    },
+    {
+      path: '/change/tpassword',
+      name: 'changeTPassword',
+      component: changeTPassword,
     },
     {
       path: '/phone',
@@ -172,6 +182,18 @@ const router = new Router({
       path: '/apps',
       name: 'apps',
       component: apps,
+      beforeEnter: requireAuth,
+    },
+    {
+      path: '/account/list',
+      name: 'accountList',
+      component: accountList,
+      beforeEnter: requireAuth,
+    },
+    {
+      path: '/account/add',
+      name: 'addAccount',
+      component: addAccount,
       beforeEnter: requireAuth,
     },
     // redirect views

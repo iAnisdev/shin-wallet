@@ -3,9 +3,9 @@
     <div class="layer">
       <img src="@/assets/logo.png" class="logo" srcset />
       <div class="form">
-        <Select v-model="loginMethod" placeholder="Login Method">
+        <!-- <Select v-model="loginMethod" placeholder="Login Method">
           <Option v-for="item in methodList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
+        </Select>-->
         <div style="margin-top: 2vh" v-if="loginMethod == 'username'">
           <Input prefix="ios-contact" placeholder="请输入用户名" v-model="userName" size="large" />
         </div>

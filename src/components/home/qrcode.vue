@@ -2,39 +2,37 @@
   <section class="qrcodePage">
     <div class="qrcodeCard">
       <div class="walletBox">
-        <h4 class="walletAddress">钱包账号：{{userAddress | addressShortner('12')   | oxFliter}}</h4>
+        <h4 class="walletAddress">钱包账号：{{userAddress | addressShortner('12') | oxFliter}}</h4>
         <input type="hidden" id="walletAddr" :value="userAddress   | oxFliter " />
-        <Icon type="md-copy" size="20" @click="copyTestingCode"/>
+        <Icon type="md-copy" size="20" @click="copyTestingCode" />
       </div>
       <div class="qrBox">
-      <qrcode :value="userAddress" class="qrcode" />
+        <qrcode :value="userAddress" class="qrcode" />
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import Qrcode from 'vue-qrcode'
+import Qrcode from "vue-qrcode";
 import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
-    Qrcode,
+    Qrcode
   },
-  data(){
-    return{
-
-    }
+  data() {
+    return {};
   },
-  computed:{
-  ...mapGetters({
-    isLoggedIn: "getLoginStatus",
-    userToken: "getUserToken",
-    userAddress: "getUserAddress",
-    userSAddress: "getUserSAddress",
-    userUID: "getUserUID"
-  })
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "getLoginStatus",
+      userToken: "getUserToken",
+      userAddress: "getUserAddress",
+      userSAddress: "getUserSAddress",
+      userUID: "getUserUID"
+    })
   },
-  methods:{
+  methods: {
     copyTestingCode() {
       let that = this;
       let testingCodeToCopy = document.querySelector("#walletAddr");
@@ -43,7 +41,7 @@ export default {
       try {
         var successful = document.execCommand("copy");
         var msg = successful ? "successful" : "unsuccessful";
-         this.$Message.success({
+        this.$Message.success({
           background: true,
           content: "复制钱包地址"
         });
@@ -72,7 +70,6 @@ export default {
 }
 .qrcodeCard {
   margin: auto;
-  width: 316px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
@@ -80,26 +77,26 @@ export default {
 }
 .walletBox {
   border-bottom: 2px dashed lightgray;
-  padding: 2vh 2%;
+  padding: 2vh 0%;
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
-.walletAddress{
+.walletAddress {
   width: 80%;
-font-size:16px;
-font-family:PingFang SC;
-font-weight:600;
-line-height:22px;
-color:rgba(0,0,0,1);
-opacity:1;
+  font-size: 16px;
+  font-family: PingFang SC;
+  font-weight: 600;
+  line-height: 22px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
 }
-.qrBox{
+.qrBox {
   text-align: center;
 }
-.qrcode{
-  width: 256px;
-  height: 256px;
+.qrcode {
+  width: 320px;
+  height: 320px;
   margin: auto;
 }
 </style>

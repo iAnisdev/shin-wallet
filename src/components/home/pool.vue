@@ -29,34 +29,48 @@
       <div class="functionInfoCard">
         <div class="function" @click="showToPool">
           <div class="col">
+            <img src="@/assets/pool/toPool.png" class="functionIcon" />
             <h3 class="functionTitle">转入</h3>
-            <h3 class="functionInfo">转入到矿池</h3>
           </div>
-          <img src="@/assets/pool/toPool.png" class="functionIcon" />
         </div>
-        <div class="lineHR"></div>
         <div class="function" @click="showOutofPool">
           <div class="col">
+            <img src="@/assets/pool/outOfPool.png" class="functionIcon" />
             <h3 class="functionTitle">转出</h3>
-            <h3 class="functionInfo">从矿池中转出</h3>
           </div>
-          <img src="@/assets/pool/outOfPool.png" class="functionIcon" />
         </div>
-        <div class="function bdTP">
+        <div class="function">
           <div class="col">
+            <img src="@/assets/pool/minepool.png" class="functionIcon" />
             <h3 class="functionTitle">矿池</h3>
-            <h3 class="functionInfo">矿池</h3>
           </div>
-          <img src="@/assets/pool/minepool.png" class="functionIcon" />
         </div>
-        <div class="lineHR"></div>
-        <div class="function bdTP">
+        <div class="function">
           <div class="col">
+            <img src="@/assets/pool/record.png" class="functionIcon" />
             <h3 class="functionTitle">记录</h3>
-            <h3 class="functionInfo">收益明细</h3>
           </div>
-          <img src="@/assets/pool/record.png" class="functionIcon" />
         </div>
+      </div>
+    </div>
+    <div class="powerBox">
+      <div class="powerSection">
+        <div class="powerSection__title">
+          <h3>持币算力</h3>
+        </div>
+        <h1 class="powerSection__amount">+{{userData.stakepwr | noToFIxed('4')}}</h1>
+      </div>
+      <div class="powerSection">
+        <div class="powerSection__title">
+          <h3>持币算力</h3>
+        </div>
+        <h1 class="powerSection__amount">+{{userData.promopwr | noToFIxed('4')}}</h1>
+      </div>
+      <div class="powerSection">
+        <div class="powerSection__title">
+          <h3>持币算力</h3>
+        </div>
+        <h1 class="powerSection__amount">+{{userData.indirpromopwr | noToFIxed('4')}}</h1>
       </div>
     </div>
     <div class="chartBox">
@@ -157,7 +171,7 @@ export default {
           let totalWalletAsset =
             Number(that.checkingAddBalance) + Number(that.savingAddBalance);
           that.totalWalletAsset = String(totalWalletAsset);
-    that.toggelLoader(false)
+          that.toggelLoader(false);
         })
         .catch(err => {
           console.log("getWalletBalanceByAddress ", err);
@@ -420,8 +434,6 @@ export default {
 }
 .functionInfoCard {
   margin-top: 1.5vh;
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
   border-radius: 8px;
   width: 96%;
@@ -435,8 +447,11 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 48%;
-  padding: 3% 2%;
+  text-align: center;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+  padding: 12px 15px;
 }
 .col {
   display: flex;
@@ -523,5 +538,43 @@ h6 {
 .errorMsg {
   color: red;
   font-size: 14px;
+}
+
+/* New Design Update css */
+.powerBox {
+  width: 96%;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  opacity: 1;
+  border-radius: 32px;
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4% 10%;
+}
+.powerSection {
+  border-bottom: 3px solid rgba(29, 40, 99, 1);
+  opacity: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 2vh;
+}
+.powerSection__title {
+  background: rgba(29, 40, 99, 1);
+  opacity: 1;
+  border-radius: 16px 16px 0px 0px;
+  font-size: 14px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 1);
+  padding: 8px 12px 1px;
+}
+.powerSection__amount {
+  font-size: 30px;
+  font-family: PingFang SC;
+  font-weight: 600;
+  color: rgba(15, 192, 60, 1);
 }
 </style>

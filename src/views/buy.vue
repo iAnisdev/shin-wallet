@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
 import navbar from "@/components/shared/navbar";
 import Qrcode from "vue-qrcode";
 export default {
@@ -47,6 +48,10 @@ export default {
         {
           value: "USDT",
           label: "USDT"
+        },
+        {
+          value: "SHIN",
+          label: "SHIN"
         }
       ],
       selectedType: "ERC20",
@@ -58,6 +63,14 @@ export default {
         "请务必确认电脑及浏览器安全，防止信息被篡改或泄露。"
       ]
     };
+  },
+  computed: {
+    ...mapGetters({
+      isLoggedIn: "getLoginStatus",
+      userToken: "getUserToken",
+      getUserCAddress: "getUserCAddress",
+      getUserERCAddress: "getUserERCAddress"
+    })
   },
   methods: {
     copyTestingCode() {
@@ -79,6 +92,22 @@ export default {
       testingCodeToCopy.setAttribute("type", "hidden");
       window.getSelection().removeAllRanges();
     }
+  },
+  watch: {
+    currentToken(newVal, oldVal) {
+      let that = this;
+      if (newVal == "SHIN") {
+        that.walletAddr = that.getUserCAddress;
+      } else {
+        that.walletAddr = that.getUserERCAddress;
+      }
+    }
+  },
+  mounted() {
+    let that = this;
+    setTimeout(function(){
+    that.walletAddr = that.getUserERCAddress;
+    }, 1000)
   }
 };
 </script>

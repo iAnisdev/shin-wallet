@@ -23,10 +23,10 @@ export const userLogin = ({ commit, dispatch }, data) => new Promise((resolve, r
             let uid = res.data.result.uid
             let address = res.data.result.address
             let saddress = res.data.result.saddress
-            Cookies.setCookie('x-auth-tok', userToken, 20)
-            Cookies.setCookie('x-uid', uid, 20)
-            Cookies.setCookie('x-address', address, 20)
-            Cookies.setCookie('x-saddress', saddress, 20)
+            Cookies.setCookie('x-auth-tok', userToken, 18)
+            Cookies.setCookie('x-uid', uid, 18)
+            Cookies.setCookie('x-address', address, 18)
+            Cookies.setCookie('x-saddress', saddress, 18)
             commit('SET_LOGIN_STATUS', true)
             commit('SET_USER_TOKEN', userToken)
             commit('SET_USER_ADDRESS', address)
@@ -51,15 +51,16 @@ export const userRegister = ({ commit, dispatch }, data) => new Promise((resolve
             let uid = res.data.result.uid
             let address = res.data.result.address
             let saddress = res.data.result.saddress
-            Cookies.setCookie('x-auth-tok', userToken, 20)
-            Cookies.setCookie('x-uid', uid, 20)
-            Cookies.setCookie('x-address', address, 20)
-            Cookies.setCookie('x-saddress', saddress, 20)
+            Cookies.setCookie('x-auth-tok', userToken, 18)
+            Cookies.setCookie('x-uid', uid, 18)
+            Cookies.setCookie('x-address', address, 18)
+            Cookies.setCookie('x-saddress', saddress, 18)
             commit('SET_LOGIN_STATUS', true)
             commit('SET_USER_TOKEN', userToken)
             commit('SET_USER_ADDRESS', address)
             commit('SET_USER_SADDRESS', saddress)
             commit('SET_USER_UID', uid)
+            dispatch('getUserData', { token: userToken })
             router.push('/')
             resolve(res)
         } else {
@@ -72,6 +73,18 @@ export const userRegister = ({ commit, dispatch }, data) => new Promise((resolve
 
 export const changePassword = ({ commit, dispatch }, data) => new Promise((resolve, reject) => {
     API().post('/sh/changepassword.php', data).then((res) => {
+        if (res.data.status == 0) {
+            resolve(res.data)
+        } else {
+            reject(res.data);
+        }
+    }).catch((err) => {
+        reject(err);
+    });
+});
+
+export const changeTPassword = ({ commit, dispatch }, data) => new Promise((resolve, reject) => {
+    API().post('/sh/transpw.php', data).then((res) => {
         if (res.data.status == 0) {
             resolve(res.data)
         } else {

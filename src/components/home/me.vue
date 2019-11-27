@@ -1,34 +1,47 @@
 <template>
   <section class="mePage">
-    <div class="userInfoBox">
-      <div class="userInfoCard">
-        <div class="rowSB">
-          <h3 class="name">{{userData.username}}</h3>
-          <!-- <router-link to="/qrcode">
-            <v-icon name="qrcode" scale="1.2"></v-icon>
-          </router-link> -->
+    <router-link to="/profile">
+      <div class="userInfoBox">
+        <div class="userInfoCard">
+          <div class="rowSB">
+            <h3 class="name">{{userData.username}}</h3>
+          </div>
+          <div class="rowFS">
+            <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16') | oxFliter}}</h5>
+            <input type="hidden" id="walletAddr" :value="userAddress  | oxFliter" />
+            <Icon type="md-copy" size="20" @click="copyTestingCode" />
+          </div>
         </div>
-        <div class="rowFS">
-          <h5 class="walletAddr">钱包账号：{{userAddress | addressShortner('16')  | oxFliter}}</h5>
-          <input type="hidden" id="walletAddr" :value="userAddress  | oxFliter" />
-          <Icon type="md-copy" size="20" @click="copyTestingCode" />
-        </div>
+        <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
       </div>
-    </div>
+    </router-link>
     <div class="cellGroup">
-      <router-link to="/changePassword">
+      <router-link to="/change/tpassword">
         <div class="cellWithArrow">
           <div class="rowFS">
             <img src="@/assets/me/lock.png" alt class="cellImg" />
             <h4 class="cellTitle">交易密码</h4>
           </div>
           <div class="rowFS">
-            <h5 class="cellExtra">未设置</h5>
+            <h5 class="cellExtra" v-if="userData.tpass == 0">未设置</h5>
             <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
           </div>
         </div>
       </router-link>
       <div class="cellLine"></div>
+      <router-link to="/change/password">
+        <div class="cellWithArrow">
+          <div class="rowFS">
+            <img src="@/assets/me/lock.png" alt class="cellImg" />
+            <h4 class="cellTitle">更改登录密码</h4>
+          </div>
+          <div class="rowFS">
+            <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
+          </div>
+        </div>
+      </router-link>
+    </div>
+    <div class="cellGroup">
       <router-link to="/phone">
         <div class="cell">
           <div class="rowFS">
@@ -40,19 +53,7 @@
           </div>
         </div>
       </router-link>
-    </div>
-    <div class="cellGroup">
-      <!-- <div class="cellWithArrow">
-        <div class="rowFS">
-          <img src="@/assets/me/message.png" alt class="cellImg" />
-          <h4 class="cellTitle">绑定邮箱</h4>
-        </div>
-        <div class="rowFS">
-          <h5 class="cellExtra">未绑定</h5>
-          <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
-        </div>
-      </div>
-      <div class="cellLine"></div>-->
+      <div class="cellLine"></div>
       <router-link to="/refer">
         <div class="cellWithArrow">
           <div class="rowFS">
@@ -76,38 +77,16 @@
       </div>
     </div>
     <div class="cellGroup">
-      <!-- <div class="cellWithArrow">
-        <div class="rowFS">
-          <img src="@/assets/me/sound.png" alt class="cellImg" />
-          <h4 class="cellTitle">绑定邮箱</h4>
-        </div>
-        <div class="rowFS">
-          <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
-        </div>
-      </div>
-      <div class="cellLine"></div>-->
-      <!-- <div class="cellWithArrow">
-        <div class="rowFS">
-          <img src="@/assets/me/translate.png" alt class="cellImg" />
-          <h4 class="cellTitle">邀请好友</h4>
-        </div>
-        <div class="rowFS">
-          <h5 class="cellExtra">简体中文</h5>
-          <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
-        </div>
-      </div> 
-      <div class="cellLine"></div>
-      -->
       <router-link to="/apps">
-      <div class="cellWithArrow">
-        <div class="rowFS">
-          <img src="@/assets/me/share.png" alt class="cellImg" />
-          <h4 class="cellTitle">APP分享</h4>
+        <div class="cellWithArrow">
+          <div class="rowFS">
+            <img src="@/assets/me/share.png" alt class="cellImg" />
+            <h4 class="cellTitle">APP分享</h4>
+          </div>
+          <div class="rowFS">
+            <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
+          </div>
         </div>
-        <div class="rowFS">
-          <img src="@/assets/me/arrowLeft.png" alt class="cellArrow" />
-        </div>
-      </div>
       </router-link>
       <div class="cellLine"></div>
       <div class="cell">
@@ -119,6 +98,14 @@
           <h5 class="cellExtra">SHIN@sharein.io</h5>
         </div>
       </div>
+    </div>
+    <div class="cellGroup">
+      <router-link to="/account/list">
+      <div class="logoutCell">
+        <img src="@/assets/me/switch.png" alt class="cellImg" />
+        <h4 class="cellTitle">切换账号</h4>
+      </div>
+      </router-link>
     </div>
     <div class="cellGroup">
       <div class="logoutCell" @click="logout">
@@ -186,7 +173,7 @@ export default {
       token: that.userToken
     };
     this.getUserData(data);
-    that.toggelLoader(false)
+    that.toggelLoader(false);
   }
 };
 </script>
@@ -314,7 +301,7 @@ export default {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  padding: 3% 6%;
+  padding: 1% 6%;
   width: 100%;
 }
 </style>

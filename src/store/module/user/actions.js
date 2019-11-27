@@ -16,11 +16,18 @@ export const getUserData = ({ commit, dispatch }, data) => {
                 let saddress = userData.addresses.find(function (address) {
                     return address.atype == 'saving';
                 }).address;
+                let ercAddress = userData.addresses.find(function (address) {
+                    return address.atype == 'erctrans';
+                }).address;
                 Cookies.setCookie('x-auth-tok', userToken, 20)
                 Cookies.setCookie('x-uid', uid, 20)
                 Cookies.setCookie('x-address', address, 20)
                 Cookies.setCookie('x-saddress', saddress, 20)
+                Cookies.setCookie('x-erctrans', ercAddress, 20)
                 commit('SET_USER_DATA', userData)
+                commit('SET_USER_ADDRESS', address)
+                commit('SET_USER_ERC', ercAddress)
+                commit('SET_USER_PHONE', userData.phones[0].phone)
                 resolve(userData)
             } else {
                 reject(res.data);
@@ -30,6 +37,7 @@ export const getUserData = ({ commit, dispatch }, data) => {
         });
     })
 }
+
 export const getDataFromCookies = ({ commit, dispatch }) => {
     try {
         let userToken = Cookies.getCookies('x-auth-tok')

@@ -8,7 +8,8 @@ Vue.use(Vuex)
 
 const state = {
     showLoader: false,
-    currentTran: {}
+    currentTran: {},
+    otherUsernames: []
 }
 
 export default {
