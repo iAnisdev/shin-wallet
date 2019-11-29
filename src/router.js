@@ -13,7 +13,6 @@ import transaction from './views/transaction.vue'
 import record from './views/record.vue'
 import scan from './views/scan.vue'
 import phone from './views/phones.vue'
-import addPhone from './views/addphone.vue'
 import transfer from './views/transfer.vue'
 import refer from './views/refer.vue'
 import apps from './views/apps.vue'
@@ -161,11 +160,6 @@ const router = new Router({
       path: '/phone',
       name: 'phone',
       component: phone,
-    },
-    {
-      path: '/phone/add',
-      name: 'addphone',
-      component: addPhone,
     },
     {
       path: '/transfer',

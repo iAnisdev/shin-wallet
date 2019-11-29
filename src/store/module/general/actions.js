@@ -2,7 +2,7 @@ import API from '@/plugins/API'
 import Storage from '@/plugins/Storage'
 import Cookies from '@/plugins/cookies'
 import router from '@/router'
-import { reject, Promise } from 'q'
+const axios = require('axios')
 
 export const toggelLoader = ({ commit, dispatch }, data) => {
     commit('SET_LOADER_STATUS', data)
@@ -80,6 +80,20 @@ export const addAdditionalAccount = ({ commit, dispatch }, data) => {
         }).catch((err) => {
             reject(err)
         })
+    })
+}
+
+export const getALLCountryList = ({ commit, dispatch }, data) => {
+    return new Promise((resolve, reject) => {
+        axios.get('https://restcountries.eu/rest/v2/all')
+            .then(function (response) {
+                commit('SET_COUNTRIES_LIST', response.data)
+                resolve(response.data)
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
     })
 }
 

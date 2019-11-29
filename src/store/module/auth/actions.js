@@ -95,20 +95,8 @@ export const changeTPassword = ({ commit, dispatch }, data) => new Promise((reso
     });
 });
 
-export const addNewPhoneNumber = ({ commit, dispatch }, data) => new Promise((resolve, reject) => {
-    API().post('/sh/addphone.php', data).then((res) => {
-        if (res.data.status == 0) {
-            resolve(res.data)
-        } else {
-            reject(res.data);
-        }
-    }).catch((err) => {
-        reject(err);
-    });
-});
-
-export const deleteUserPhoneNumber = ({ commit, dispatch }, data) => new Promise((resolve, reject) => {
-    API().post('/sh/delphone.php', data).then((res) => {
+export const changePhoneNumber = ({ commit, dispatch }, data) => new Promise((resolve, reject) => {
+    API().post('/sh/changephone.php', data).then((res) => {
         if (res.data.status == 0) {
             resolve(res.data)
         } else {

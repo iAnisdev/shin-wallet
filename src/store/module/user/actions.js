@@ -27,7 +27,7 @@ export const getUserData = ({ commit, dispatch }, data) => {
                 commit('SET_USER_DATA', userData)
                 commit('SET_USER_ADDRESS', address)
                 commit('SET_USER_ERC', ercAddress)
-                commit('SET_USER_PHONE', userData.phones[0].phone)
+                commit('SET_USER_PHONE', userData.phones[0])
                 resolve(userData)
             } else {
                 reject(res.data);

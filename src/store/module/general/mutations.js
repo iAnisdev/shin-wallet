@@ -11,5 +11,8 @@ module.exports = {
     },
     SET_OTHER_USERNAMES: (state, list) => {
         state.otherUsernames = list
+    },
+    SET_COUNTRIES_LIST: (state, list) => {
+        state.countryList = list
     }
 }

@@ -110,7 +110,7 @@ export default {
       } else {
         this.$Message.error({
           background: true,
-          content: "Invalid phone number"
+          content: "无效电话号码"
         });
       }
     },

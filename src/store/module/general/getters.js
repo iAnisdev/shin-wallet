@@ -7,5 +7,8 @@ module.exports = {
     },
     getUsernameList: (state) => {
         return state.otherUsernames
+    },
+    getCountryList: (state) => {
+        return state.countryList
     }
 }

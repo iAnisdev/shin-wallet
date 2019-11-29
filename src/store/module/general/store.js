@@ -9,7 +9,8 @@ Vue.use(Vuex)
 const state = {
     showLoader: false,
     currentTran: {},
-    otherUsernames: []
+    otherUsernames: [],
+    countryList: []
 }
 
 export default {

@@ -5,7 +5,7 @@
       <div class="topBox">
         <h4 class="topBoxTitle">号码：</h4>
         <div class="phoneBox">
-          <h2>{{userPhone}}</h2>
+            <h2>+{{userPhone.country}}-{{userPhone.phone}}</h2>
         </div>
       </div>
     </div>
@@ -21,7 +21,7 @@
       </div>
       <div class="cellLine"></div>
     </div>
-    <div class="buttonView">
+    <div class="buttonView" v-if="userData.addacct < 10">
       <Button class="btn" size="large" to="/account/add" long>添加账号</Button>
     </div>
     <Modal v-model="loginModel" footer-hide>
@@ -153,7 +153,15 @@ export default {
     let data = {
       token: this.userToken
     };
-    this.userNamesList(data);
+    this.toggelLoader();
+    this.userNamesList(data)
+      .then(res => {
+        this.toggelLoader();
+      })
+      .catch(err => {
+        console.log("userNamesList err ", err);
+        that.toggelLoader();
+      });
   }
 };
 </script>
