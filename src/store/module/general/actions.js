@@ -8,9 +8,19 @@ export const toggelLoader = ({ commit, dispatch }, data) => {
     commit('SET_LOADER_STATUS', data)
 
 }
-export const setCurrentTransaction = ({ commit, dispatch }, data) => {
-    commit('SET_CURRENT_TRANSACTION', data)
-    return new Promise.resolve()
+export const getSpecificTransaction = ({ commit, dispatch }, data) => {
+    return new Promise((resolve, reject) => {
+        API().post('/sh/transactionByID.php', data).then((res) => {
+            if (res.data.status == 0) {
+                resolve(res.data.result)
+                commit('SET_CURRENT_TRANSACTION', res.data.result)
+            } else {
+                reject(res.data);
+            }
+        }).catch((err) => {
+            reject(err);
+        });
+    })
 }
 export const calculateExchange = ({ commit, dispatch }, data) => {
     return new Promise((resolve, reject) => {

@@ -27,6 +27,8 @@
             @on-focus="hideLogo"
             @on-blur="showLogo"
           />
+
+          <div class="Errmsg">{{ passErrMessage }}</div>
         </div>
         <div style="margin-top: 2vh">
           <Input
@@ -57,7 +59,8 @@ export default {
       showL: true,
       old: "",
       newPassword: "",
-      cpassword: ""
+      cpassword: "",
+      passErrMessage: "",
     };
   },
   computed: {
@@ -72,12 +75,10 @@ export default {
       toggelLoader: "toggelLoader"
     }),
     showLogo() {
-      console.log("called");
       let that = this;
       that.showL = true;
     },
     hideLogo() {
-      console.log("called");
       let that = this;
       that.showL = false;
     },
@@ -93,7 +94,12 @@ export default {
           background: true,
           content: "无效密码"
         });
-      } else if (!that.isValid(that.cpassword)) {
+      } else if (!that.passErrMessage == "") {
+        this.$Message.error({
+          background: true,
+          content: "无效密码"
+        });
+      }else if (!that.isValid(that.cpassword)) {
         this.$Message.error({
           background: true,
           content: "无效密码"
@@ -112,7 +118,6 @@ export default {
         that
           .changePassword(data)
           .then(res => {
-            console.log(res);
             this.$Message.success({
               background: true,
               content: "更新密码"
@@ -137,6 +142,18 @@ export default {
         return false;
       } else {
         return true;
+      }
+    }
+  },
+  watch: {
+    newPassword(newVal) {
+      let that = this;
+      if (newVal) {
+        if (newVal.length < 8) {
+          that.passErrMessage = "* 密码不少于8个字符";
+        } else {
+          that.passErrMessage = "";
+        }
       }
     }
   }
@@ -175,5 +192,10 @@ export default {
   color: rgba(255, 255, 255, 1);
   opacity: 1;
   margin-top: 2vh;
+}
+.Errmsg {
+  text-align: left;
+  margin-top: 1vh;
+  color: red;
 }
 </style>

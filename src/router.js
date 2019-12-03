@@ -16,6 +16,7 @@ import phone from './views/phones.vue'
 import transfer from './views/transfer.vue'
 import refer from './views/refer.vue'
 import apps from './views/apps.vue'
+import walletTransfer from './views/walletTransfer.vue'
 // Password Update UI
 import changePassword from './views/change/password.vue'
 import changeTPassword from './views/change/tpassword.vue'
@@ -188,6 +189,12 @@ const router = new Router({
       path: '/account/add',
       name: 'addAccount',
       component: addAccount,
+      beforeEnter: requireAuth,
+    },
+    {
+      path: '/wallet/transfer/:wallet',
+      name: 'walletTransfer',
+      component: walletTransfer,
       beforeEnter: requireAuth,
     },
     // redirect views

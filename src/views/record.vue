@@ -29,6 +29,27 @@ export default {
       isLoggedIn: "getLoginStatus",
       getCurrentTrans: "getCurrentTrans"
     })
+  },
+  methods: {
+    ...mapActions({
+      toggelLoader: "toggelLoader",
+      getSpecificTransaction: "getSpecificTransaction"
+    })
+  },
+  mounted() {
+    let that = this;
+    let transId = that.$router.history.current.params.id;
+    that.toggelLoader();
+    let data = {
+      id: transId
+    };
+    that
+      .getSpecificTransaction(data)
+      .then(res => {})
+      .catch(err => {})
+      .finally(() => {
+        that.toggelLoader(false);
+      });
   }
 };
 </script>

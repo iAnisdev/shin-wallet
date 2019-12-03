@@ -5,7 +5,7 @@
       <div class="topBox">
         <h4 class="topBoxTitle">号码：</h4>
         <div class="phoneBox">
-          <h2>{{userPhone}}</h2>
+          <h2>+{{userPhone.country}} - {{userPhone.phone}}</h2>
         </div>
       </div>
     </div>
@@ -29,6 +29,7 @@
             <Icon :type="eyeIcon" />
           </span>
         </Input>
+          <div class="Errmsg">{{ passErrMessage }}</div>
       </div>
       <div style="margin-top: 2vh">
         <Input
@@ -63,6 +64,7 @@ export default {
       password: "",
       cpassword: "",
       refer: "",
+      passErrMessage: "",
       //show and hide password
       inputType: "password",
       eyeIcon: "md-eye"
@@ -94,7 +96,12 @@ export default {
           background: true,
           content: "无效密码"
         });
-      } else if (!that.isValid(that.cpassword)) {
+      }  else if (!that.passErrMessage == "") {
+        this.$Message.error({
+          background: true,
+          content: "无效密码"
+        });
+      }  else if (!that.isValid(that.cpassword)) {
         this.$Message.error({
           background: true,
           content: "无效密码"
@@ -155,6 +162,18 @@ export default {
         that.eyeIcon = "md-eye";
       }
     }
+  },
+  watch: {
+    password(newVal) {
+      let that = this;
+      if (newVal) {
+        if (newVal.length < 8) {
+          that.passErrMessage = "* 密码不少于8个字符";
+        } else {
+          that.passErrMessage = "";
+        }
+      }
+    }
   }
 };
 </script>
@@ -211,5 +230,10 @@ export default {
   font-weight: 400;
   color: rgba(255, 255, 255, 1);
   opacity: 1;
+}
+.Errmsg {
+  text-align: left;
+  margin-top: 1vh;
+  color: red;
 }
 </style>

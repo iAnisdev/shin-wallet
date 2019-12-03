@@ -116,7 +116,6 @@ export default {
         that
           .changeTPassword(data)
           .then(res => {
-            console.log(res);
             this.$Message.success({
               background: true,
               content: "更新密码"
@@ -158,7 +157,6 @@ export default {
         that
           .changeTPassword(data)
           .then(res => {
-            console.log(res);
             this.$Message.success({
               background: true
             });

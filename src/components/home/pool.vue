@@ -27,18 +27,22 @@
     </div>
     <div class="functionInfoBox">
       <div class="functionInfoCard">
-        <div class="function" @click="showToPool">
-          <div class="col">
-            <img src="@/assets/pool/toPool.png" class="functionIcon" />
-            <h3 class="functionTitle">转入</h3>
+        <router-link to="/wallet/transfer/saving">
+          <div class="function">
+            <div class="col">
+              <img src="@/assets/pool/toPool.png" class="functionIcon" />
+              <h3 class="functionTitle">转入</h3>
+            </div>
           </div>
-        </div>
-        <div class="function" @click="showOutofPool">
-          <div class="col">
-            <img src="@/assets/pool/outOfPool.png" class="functionIcon" />
-            <h3 class="functionTitle">转出</h3>
+        </router-link>
+        <router-link to="/wallet/transfer/checking">
+          <div class="function">
+            <div class="col">
+              <img src="@/assets/pool/outOfPool.png" class="functionIcon" />
+              <h3 class="functionTitle">转出</h3>
+            </div>
           </div>
-        </div>
+        </router-link>
         <div class="function">
           <div class="col">
             <img src="@/assets/pool/minepool.png" class="functionIcon" />
@@ -77,39 +81,9 @@
       <div class="chartCard">
         <h2 class="chartTitle">最近一周收益（SHIN)</h2>
         <h4 class="chartInfo">挖矿最低持币：100 SHIN</h4>
+        <img src="@/assets/chart.png" class="chartImg" />
       </div>
     </div>
-    <Modal
-      v-model="showToPoolModel"
-      title="划转到矿池"
-      @on-ok="transferToPool"
-      ok-text="划转"
-      @on-cancel="showToPool"
-      :closable="closable"
-    >
-      <div class="popupHeadings">
-        <h5>输入划转金额</h5>
-        <h6>输入划转金额: {{checkingAddBalance}}</h6>
-        <h6>最少数量: 100 SHIN</h6>
-      </div>
-      <Input v-model="amountToPool" type="number" placeholder="输入划转金额" />
-      <h6 class="errorMsg">{{amountToPoolError}}</h6>
-    </Modal>
-    <Modal
-      v-model="showOutOfPoolModel"
-      title="输入划转金额"
-      ok-text="转出"
-      @on-ok="transferFromPool"
-      @on-cancel="showOutofPool"
-      :closable="closable"
-    >
-      <div class="popupHeadings">
-        <h5>输入划转金额</h5>
-        <h6>矿池余额: {{savingAddBalance}}</h6>
-      </div>
-      <Input v-model="amountoutOfPool" type="number" placeholder="输入划转金额" />
-      <h6 class="errorMsg">{{amountOutOfPoolError}}</h6>
-    </Modal>
   </section>
 </template>
 
@@ -119,16 +93,10 @@ import { _ } from "vue-underscore";
 export default {
   data() {
     return {
-      showToPoolModel: false,
-      showOutOfPoolModel: false,
       checkingAddBalance: 0,
       savingAddBalance: 0,
       promotionalRewards: 0,
-      amountToPool: 0,
-      amountoutOfPool: 0,
       totalEarning: 0,
-      amountToPoolError: "",
-      amountOutOfPoolError: "",
       closable: true,
       transactionStakeReward: [],
       transactionSalesReward: []
@@ -174,76 +142,8 @@ export default {
           that.toggelLoader(false);
         })
         .catch(err => {
-          console.log("getWalletBalanceByAddress ", err);
           that.toggelLoader();
         });
-    },
-    showToPool() {
-      this.showToPoolModel = !this.showToPoolModel;
-    },
-    showOutofPool() {
-      this.showOutOfPoolModel = !this.showOutOfPoolModel;
-    },
-    transferToPool() {
-      let that = this;
-      if (that.amountToPoolError !== "" || that.amountToPool == 0) {
-        setTimeout(function() {
-          that.showToPoolModel = true;
-        }, 10);
-      } else {
-        let data = {
-          token: that.userToken,
-          from: that.userAddress,
-          to: that.userSAddress,
-          amount: that.amountToPool
-        };
-        that
-          .transferAmount(data)
-          .then(res => {
-            this.$Message.success({
-              background: true,
-              content: "交易成功"
-            });
-            that.getUserWalletStates();
-          })
-          .catch(err => {
-            this.$Message.error({
-              background: true,
-              content: err.message
-            });
-          });
-      }
-    },
-    transferFromPool() {
-      console.log("transferFromPool called");
-      let that = this;
-      if (that.amountOutOfPoolError !== "" || that.amountoutOfPool == 0) {
-        setTimeout(function() {
-          that.showOutOfPoolModel = true;
-        }, 10);
-      } else {
-        let data = {
-          token: that.userToken,
-          to: that.userAddress,
-          from: that.userSAddress,
-          amount: that.amountoutOfPool
-        };
-        that
-          .transferAmount(data)
-          .then(res => {
-            this.$Message.success({
-              background: true,
-              content: "交易成功"
-            });
-            that.getUserWalletStates();
-          })
-          .catch(err => {
-            this.$Message.error({
-              background: true,
-              content: err.message
-            });
-          });
-      }
     },
     getYesterDayRewards() {
       let that = this;
@@ -266,57 +166,12 @@ export default {
       that.totalEarning = totalEarning;
     }
   },
-  watch: {
-    amountToPool(newVal, oldVal) {
-      let that = this;
-      if (newVal) {
-        if (newVal < 100) {
-          that.amountToPoolError = "最少: 100";
-        } else {
-          let checkingAddBalance = that.checkingAddBalance;
-          if (newVal > Number(checkingAddBalance)) {
-            that.amountToPoolError = "无效金额";
-          } else {
-            that.amountToPoolError = "";
-          }
-        }
-      }
-    },
-    amountoutOfPool(newVal, oldVal) {
-      let that = this;
-      if (newVal) {
-        let savingAddBalance = that.savingAddBalance;
-        if (newVal > Number(savingAddBalance)) {
-          that.amountOutOfPoolError = "无效金额";
-        } else {
-          that.amountOutOfPoolError = "";
-        }
-      }
-    }
-  },
   mounted() {
     let that = this;
     this.getUserWalletStates();
-    // let today = new Date();
-    // let yesterday = new Date(today);
-    // yesterday.setDate(today.getDate() - 1);
-    // var dd = yesterday.getDate();
-    // var mm = yesterday.getMonth() + 1; //January is 0!
-
-    // var yyyy = yesterday.getFullYear();
-    // if (dd < 10) {
-    //   dd = "0" + dd;
-    // }
-    // if (mm < 10) {
-    //   mm = "0" + mm;
-    // }
-    // yesterday = yyyy + "-" + mm + "-" + dd;
-    // console.log("yesterday", yesterday);
     let data = {
       address: that.userAddress,
       type: "stakereward"
-      // sdate: yesterday,
-      // edate: yesterday
     };
     that
       .transactionsList(data)
@@ -325,8 +180,6 @@ export default {
         return that.transactionsList({
           address: that.userAddress,
           type: "salesreward"
-          // sdate: yesterday,
-          // edate: yesterday
         });
       })
       .then(salesreward => {
@@ -494,7 +347,6 @@ export default {
 }
 .chartCard {
   width: 96%;
-  height: 275px;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   opacity: 1;
@@ -576,5 +428,8 @@ h6 {
   font-family: PingFang SC;
   font-weight: 600;
   color: rgba(15, 192, 60, 1);
+}
+.chartImg {
+  width: 100%;
 }
 </style>

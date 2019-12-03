@@ -1,7 +1,7 @@
 <template>
   <section class="phonePage">
-    <navbar showBack="'true'" title="更改手机号" />
     <div class="content" v-if="!countryShow">
+      <navbar showBack="'true'" title="更改手机号" />
       <div class="topSection">
         <div class="topBox">
           <h4 class="topBoxTitle">号码：</h4>
@@ -67,6 +67,12 @@
       </div>
     </div>
     <div v-if="countryShow">
+      <section class="navbar">
+        <div class="backButton">
+          <Icon type="md-arrow-round-back" class="backIcon" size="24" @click="toggleCountryView" />
+        </div>
+        <h3 class="pageTitle">选择国家</h3>
+      </section>
       <div class="cellGroup" v-for="(country , i) in countryList" :key="i">
         <div class="cellWithArrow" @click="updateCountry(country)">
           <div class="rowFS">
@@ -199,9 +205,9 @@ export default {
           .changePhoneNumber(data)
           .then(res => {
             that.toggelLoader();
-            this.$Message.error({
+            this.$Message.success({
               background: true,
-              content: ""
+              content: "电话号码已更改"
             });
             this.$router.go(-1);
           })
@@ -246,7 +252,7 @@ export default {
     },
     toggleCountryView() {
       let that = this;
-      that.countryShow = true;
+      that.countryShow = !that.countryShow;
     }
   },
   mounted() {
@@ -363,6 +369,8 @@ export default {
   justify-content: space-between;
   padding: 3% 6%;
   width: 100%;
+  border: 1px solid lightgray;
+  border-radius: 5px;
 }
 .cellImg {
   width: 20px;
@@ -402,5 +410,34 @@ export default {
 .cellLine {
   border: 0.8px solid rgba(0, 0, 0, 1);
   opacity: 0.08;
+}
+
+/* toggle country list CSS */
+
+.navbar {
+  height: 8vh;
+  width: 100%;
+  padding: 2% 4%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 2px solid lightgray;
+}
+.backButton {
+  align-self: center;
+}
+.backIcon {
+  align-self: center;
+}
+.pageTitle {
+  width: 80%;
+  font-size: 17px;
+  font-family: PingFang SC;
+  font-weight: 500;
+  line-height: 24px;
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
+  align-self: center;
+  text-align: center;
 }
 </style>

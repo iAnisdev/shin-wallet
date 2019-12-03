@@ -95,8 +95,6 @@ export default {
     }
   },
   mounted(){
-
-      console.log()
   },
   watch:{
     currentRoute(newVal , oldVal){

@@ -86,15 +86,11 @@ export default {
   methods: {
     ...mapActions({
       toggelLoader: "toggelLoader",
-      transactionsList: "transactionsList",
-      setCurrentTransaction: "setCurrentTransaction"
+      transactionsList: "transactionsList"
     }),
     viewTransInfo(trans) {
       let that = this;
-      that.setCurrentTransaction(trans).then(() => {
-        that.$router.push(`/record/$trans.id`);
-      });
-      console.log("trans ", trans);
+      that.$router.push(`/record/${trans.id}`);
     }
   },
   mounted() {

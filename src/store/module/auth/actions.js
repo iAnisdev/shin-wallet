@@ -45,7 +45,6 @@ export const userLogin = ({ commit, dispatch }, data) => new Promise((resolve, r
 
 export const userRegister = ({ commit, dispatch }, data) => new Promise((resolve, reject) => {
     API().post('/sh/register.php', data).then((res) => {
-        console.log('register => ', res)
         if (res.data.status == 0) {
             let userToken = res.data.result.token
             let uid = res.data.result.uid

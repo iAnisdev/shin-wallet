@@ -13,11 +13,14 @@
       </div>
     </div>
     <div class="widthdrawTable">
-      <div style="margin-top: 1vh">
+      <div style="margin-top: 2vh">
         <Input prefix="ios-bookmarks" v-model="walletAddr" placeholder="输入钱包地址" size="large" />
       </div>
-      <div style="margin-top: 1vh">
+      <div style="margin-top: 2vh">
         <Input prefix="ios-cash" v-model="amount" placeholder="输入金额" size="large" />
+      </div>
+      <div style="margin-top: 2vh">
+        <Input prefix="ios-lock" type="password" placeholder="输入交易密码" v-model="tpass" size="large" />
       </div>
       <Button size="large" long class="button" @click="transferAmount">划转</Button>
     </div>
@@ -48,6 +51,7 @@ export default {
     return {
       walletAddr: "",
       amount: "",
+      tpass: "",
       trasactionDone: false
     };
   },
@@ -71,16 +75,19 @@ export default {
     transferAmount() {
       let that = this;
       if (!that.isValid(that.walletAddr)) {
-        console.log("walletAddr");
         this.$Message.error({
           background: true,
           content: "输入钱包地址"
         });
       } else if (!that.isValid(that.amount)) {
-        console.log("amount");
         this.$Message.error({
           background: true,
           content: "无效金额"
+        });
+      } else if (!that.isValid(that.tpass)) {
+        this.$Message.error({
+          background: true,
+          content: "输入交易密码"
         });
       } else if (that.amount > Number(that.accountBalance)) {
         this.$Message.error({
@@ -93,9 +100,9 @@ export default {
           token: that.userToken,
           from: that.userAddress,
           to: walletAddr,
-          amount: that.amount
+          amount: that.amount,
+          tpass: that.tpass
         };
-        console.log("transferAmountToWallet ", data);
         that.toggelLoader();
         that
           .transferAmountToWallet(data)
@@ -109,7 +116,6 @@ export default {
           })
           .catch(err => {
             that.toggelLoader();
-            console.log("transferAmountToWallet err", err);
             this.$Message.error({
               background: true,
               content: err.message

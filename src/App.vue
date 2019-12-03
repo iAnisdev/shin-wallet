@@ -15,13 +15,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      showLoaderStatus: "showLoaderStatus",
+      showLoaderStatus: "showLoaderStatus"
     })
   },
   methods: {
     ...mapActions({
       getDataFromCookies: "getDataFromCookies",
-      getSHINSTATES: "getSHINSTATES",
+      getSHINSTATES: "getSHINSTATES"
     })
   },
   beforeMount() {
